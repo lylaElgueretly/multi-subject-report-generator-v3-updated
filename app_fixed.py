@@ -507,7 +507,46 @@ def fix_pronouns_in_text(text, pronoun, possessive):
     text = re.sub(r'\bhimself\b', f"{pronoun}self", text, flags=re.IGNORECASE)
     text = re.sub(r'\bherself\b', f"{pronoun}self", text, flags=re.IGNORECASE)
     
+    # Additional British spelling conversions
+    text = text.replace("color", "colour")
+    text = text.replace("Color", "Colour")
+    text = text.replace("behavior", "behaviour")
+    text = text.replace("Behavior", "Behaviour")
+    text = text.replace("favorite", "favourite")
+    text = text.replace("Favorite", "Favourite")
+    text = text.replace("organize", "organise")
+    text = text.replace("Organize", "Organise")
+    text = text.replace("realize", "realise")
+    text = text.replace("Realize", "Realise")
+    text = text.replace("recognize", "recognise")
+    text = text.replace("Recognize", "Recognise")
+    text = text.replace("analyze", "analyse")
+    text = text.replace("Analyze", "Analyse")
+    text = text.replace("center", "centre")
+    text = text.replace("Center", "Centre")
+    text = text.replace("meter", "metre")
+    text = text.replace("Meter", "Metre")
+    text = text.replace("liter", "litre")
+    text = text.replace("Liter", "Litre")
+    
     return text
+
+def ensure_proper_capitalization(text):
+    """Ensure sentences start with capital letters"""
+    if not text:
+        return text
+    
+    # Split by sentences
+    sentences = re.split(r'(?<=[.!?])\s+', text)
+    capitalized_sentences = []
+    
+    for sentence in sentences:
+        if sentence:
+            # Capitalize first letter
+            sentence = sentence[0].upper() + sentence[1:] if sentence else sentence
+            capitalized_sentences.append(sentence)
+    
+    return ' '.join(capitalized_sentences)
 
 def generate_comment(subject, year, name, gender, att, achieve, target, optional_text=None):
     """Generate a report comment based on subject, year, and performance bands"""
@@ -525,19 +564,23 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             reading_text = fix_pronouns_in_text(reading_5_eng[achieve], p, p_poss)
+            reading_text = ensure_proper_capitalization(reading_text)
             if reading_text[0].islower():
-                reading_text = f"{p} {reading_text}"
-            reading_sentence = f"In reading, {reading_text}"
+                reading_text = f"{p.capitalize()} {reading_text}"
+            reading_sentence = f"In reading, {lowercase_first(reading_text)}"
             
             writing_text = fix_pronouns_in_text(writing_5_eng[achieve], p, p_poss)
+            writing_text = ensure_proper_capitalization(writing_text)
             if writing_text[0].islower():
-                writing_text = f"{p} {writing_text}"
-            writing_sentence = f"In writing, {writing_text}"
+                writing_text = f"{p.capitalize()} {writing_text}"
+            writing_sentence = f"In writing, {lowercase_first(writing_text)}"
             
             reading_target_text = fix_pronouns_in_text(target_5_eng[target], p, p_poss)
+            reading_target_text = ensure_proper_capitalization(reading_target_text)
             reading_target_sentence = f"For the next term, {p} should {lowercase_first(reading_target_text)}"
             
             writing_target_text = fix_pronouns_in_text(target_write_5_eng[target], p, p_poss)
+            writing_target_text = ensure_proper_capitalization(writing_target_text)
             writing_target_sentence = f"Additionally, {p} should {lowercase_first(writing_target_text)}"
             
             closer_sentence = random.choice(closer_5_eng)
@@ -557,19 +600,23 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             reading_text = fix_pronouns_in_text(reading_7_eng[achieve], p, p_poss)
+            reading_text = ensure_proper_capitalization(reading_text)
             if reading_text[0].islower():
-                reading_text = f"{p} {reading_text}"
-            reading_sentence = f"In reading, {reading_text}"
+                reading_text = f"{p.capitalize()} {reading_text}"
+            reading_sentence = f"In reading, {lowercase_first(reading_text)}"
             
             writing_text = fix_pronouns_in_text(writing_7_eng[achieve], p, p_poss)
+            writing_text = ensure_proper_capitalization(writing_text)
             if writing_text[0].islower():
-                writing_text = f"{p} {writing_text}"
-            writing_sentence = f"In writing, {writing_text}"
+                writing_text = f"{p.capitalize()} {writing_text}"
+            writing_sentence = f"In writing, {lowercase_first(writing_text)}"
             
             reading_target_text = fix_pronouns_in_text(target_7_eng[target], p, p_poss)
+            reading_target_text = ensure_proper_capitalization(reading_target_text)
             reading_target_sentence = f"For the next term, {p} should {lowercase_first(reading_target_text)}"
             
             writing_target_text = fix_pronouns_in_text(target_write_7_eng[target], p, p_poss)
+            writing_target_text = ensure_proper_capitalization(writing_target_text)
             writing_target_sentence = f"Additionally, {p} should {lowercase_first(writing_target_text)}"
             
             closer_sentence = random.choice(closer_7_eng)
@@ -589,19 +636,23 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             reading_text = fix_pronouns_in_text(reading_8_eng[achieve], p, p_poss)
+            reading_text = ensure_proper_capitalization(reading_text)
             if reading_text[0].islower():
-                reading_text = f"{p} {reading_text}"
-            reading_sentence = f"In reading, {reading_text}"
+                reading_text = f"{p.capitalize()} {reading_text}"
+            reading_sentence = f"In reading, {lowercase_first(reading_text)}"
             
             writing_text = fix_pronouns_in_text(writing_8_eng[achieve], p, p_poss)
+            writing_text = ensure_proper_capitalization(writing_text)
             if writing_text[0].islower():
-                writing_text = f"{p} {writing_text}"
-            writing_sentence = f"In writing, {writing_text}"
+                writing_text = f"{p.capitalize()} {writing_text}"
+            writing_sentence = f"In writing, {lowercase_first(writing_text)}"
             
             reading_target_text = fix_pronouns_in_text(target_8_eng[target], p, p_poss)
+            reading_target_text = ensure_proper_capitalization(reading_target_text)
             reading_target_sentence = f"For the next term, {p} should {lowercase_first(reading_target_text)}"
             
             writing_target_text = fix_pronouns_in_text(target_write_8_eng[target], p, p_poss)
+            writing_target_text = ensure_proper_capitalization(writing_target_text)
             writing_target_sentence = f"Additionally, {p} should {lowercase_first(writing_target_text)}"
             
             closer_sentence = random.choice(closer_8_eng)
@@ -622,11 +673,13 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             science_text = fix_pronouns_in_text(science_5_sci[achieve], p, p_poss)
+            science_text = ensure_proper_capitalization(science_text)
             if science_text[0].islower():
-                science_text = f"{p} {science_text}"
+                science_text = f"{p.capitalize()} {science_text}"
             science_sentence = science_text
             
             target_text = fix_pronouns_in_text(target_5_sci[target], p, p_poss)
+            target_text = ensure_proper_capitalization(target_text)
             target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
             
             closer_sentence = random.choice(closer_5_sci)
@@ -644,11 +697,13 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             science_text = fix_pronouns_in_text(science_7_sci[achieve], p, p_poss)
+            science_text = ensure_proper_capitalization(science_text)
             if science_text[0].islower():
-                science_text = f"{p} {science_text}"
+                science_text = f"{p.capitalize()} {science_text}"
             science_sentence = science_text
             
             target_text = fix_pronouns_in_text(target_7_sci[target], p, p_poss)
+            target_text = ensure_proper_capitalization(target_text)
             target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
             
             closer_sentence = random.choice(closer_7_sci)
@@ -666,11 +721,13 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             science_text = fix_pronouns_in_text(science_8_sci[achieve], p, p_poss)
+            science_text = ensure_proper_capitalization(science_text)
             if science_text[0].islower():
-                science_text = f"{p} {science_text}"
+                science_text = f"{p.capitalize()} {science_text}"
             science_sentence = science_text
             
             target_text = fix_pronouns_in_text(target_8_sci[target], p, p_poss)
+            target_text = ensure_proper_capitalization(target_text)
             target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
             
             closer_sentence = random.choice(closer_8_sci)
@@ -689,11 +746,13 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             maths_text = fix_pronouns_in_text(maths_5_math[achieve], p, p_poss)
+            maths_text = ensure_proper_capitalization(maths_text)
             if maths_text[0].islower():
-                maths_text = f"{p} {maths_text}"
+                maths_text = f"{p.capitalize()} {maths_text}"
             maths_sentence = maths_text
             
             target_text = fix_pronouns_in_text(target_5_math[target], p, p_poss)
+            target_text = ensure_proper_capitalization(target_text)
             target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
             
             closer_sentence = random.choice(closer_5_math)
@@ -711,11 +770,13 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             maths_text = fix_pronouns_in_text(maths_7_math[achieve], p, p_poss)
+            maths_text = ensure_proper_capitalization(maths_text)
             if maths_text[0].islower():
-                maths_text = f"{p} {maths_text}"
+                maths_text = f"{p.capitalize()} {maths_text}"
             maths_sentence = maths_text
             
             target_text = fix_pronouns_in_text(target_7_math[target], p, p_poss)
+            target_text = ensure_proper_capitalization(target_text)
             target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
             
             closer_sentence = random.choice(closer_7_math)
@@ -733,11 +794,13 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             maths_text = fix_pronouns_in_text(maths_8_math[achieve], p, p_poss)
+            maths_text = ensure_proper_capitalization(maths_text)
             if maths_text[0].islower():
-                maths_text = f"{p} {maths_text}"
+                maths_text = f"{p.capitalize()} {maths_text}"
             maths_sentence = maths_text
             
             target_text = fix_pronouns_in_text(target_8_math[target], p, p_poss)
+            target_text = ensure_proper_capitalization(target_text)
             target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
             
             closer_sentence = random.choice(closer_8_math)
@@ -756,33 +819,39 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         
         # Reading
         reading_text = fix_pronouns_in_text(reading_esl[achieve], p, p_poss)
+        reading_text = ensure_proper_capitalization(reading_text)
         if reading_text[0].islower():
-            reading_text = f"{p} {reading_text}"
-        reading_sentence = f"In reading, {reading_text}"
+            reading_text = f"{p.capitalize()} {reading_text}"
+        reading_sentence = f"In reading, {lowercase_first(reading_text)}"
         
         # Writing
         writing_text = fix_pronouns_in_text(writing_esl[achieve], p, p_poss)
+        writing_text = ensure_proper_capitalization(writing_text)
         if writing_text[0].islower():
-            writing_text = f"{p} {writing_text}"
-        writing_sentence = f"In writing, {writing_text}"
+            writing_text = f"{p.capitalize()} {writing_text}"
+        writing_sentence = f"In writing, {lowercase_first(writing_text)}"
         
         # Speaking
         speaking_text = fix_pronouns_in_text(speaking_esl[achieve], p, p_poss)
+        speaking_text = ensure_proper_capitalization(speaking_text)
         if speaking_text[0].islower():
-            speaking_text = f"{p} {speaking_text}"
-        speaking_sentence = f"In speaking, {speaking_text}"
+            speaking_text = f"{p.capitalize()} {speaking_text}"
+        speaking_sentence = f"In speaking, {lowercase_first(speaking_text)}"
         
         # Listening
         listening_text = fix_pronouns_in_text(listening_esl[achieve], p, p_poss)
+        listening_text = ensure_proper_capitalization(listening_text)
         if listening_text[0].islower():
-            listening_text = f"{p} {listening_text}"
-        listening_sentence = f"In listening, {listening_text}"
+            listening_text = f"{p.capitalize()} {listening_text}"
+        listening_sentence = f"In listening, {lowercase_first(listening_text)}"
         
         # Targets
         reading_target_text = fix_pronouns_in_text(target_reading_esl[target], p, p_poss)
+        reading_target_text = ensure_proper_capitalization(reading_target_text)
         reading_target_sentence = f"For the next term, {p} should {lowercase_first(reading_target_text)}"
         
         writing_target_text = fix_pronouns_in_text(target_write_esl[target], p, p_poss)
+        writing_target_text = ensure_proper_capitalization(writing_target_text)
         writing_target_sentence = f"Additionally, {p} should {lowercase_first(writing_target_text)}"
         
         closer_sentence = random.choice(closer_esl)
@@ -804,11 +873,13 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         attitude_sentence = f"{opening} {name} {attitude_text}"
         
         chemistry_text = fix_pronouns_in_text(chemistry_chem[achieve], p, p_poss)
+        chemistry_text = ensure_proper_capitalization(chemistry_text)
         if chemistry_text[0].islower():
-            chemistry_text = f"{p} {chemistry_text}"
+            chemistry_text = f"{p.capitalize()} {chemistry_text}"
         chemistry_sentence = chemistry_text
         
         target_text = fix_pronouns_in_text(target_chem[target], p, p_poss)
+        target_text = ensure_proper_capitalization(target_text)
         target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
         
         closer_sentence = random.choice(closer_chem)
@@ -856,6 +927,9 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
     # Ensure comment ends with period
     if not comment.endswith('.'):
         comment = comment.rstrip(' ,;') + '.'
+    
+    # Final capitalization check
+    comment = ensure_proper_capitalization(comment)
     
     return comment
 
@@ -1224,4 +1298,4 @@ if 'all_comments' in st.session_state and st.session_state.all_comments:
 
 # FOOTER
 st.markdown("---")
-st.caption("CommentCraft v4.0 • Secure & Private")
+st.caption("CommentCraft v4.0 • Secure & Private • British English")
