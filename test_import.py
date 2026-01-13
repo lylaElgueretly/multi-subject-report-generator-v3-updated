@@ -1,16 +1,24 @@
-Import Test
-SUCCESS! Imported maths_bank
+import streamlit as st
 
-Sample value: calculated with precision, applied mental strategies fluently, and explored number patterns confidently
+st.title("Import Test - All Years")
 
-Good - number_bank doesn't exist (as expected)
+st.subheader("Year 5 Maths")
+try:
+    from statements_year5_Maths import maths_bank as y5_maths
+    st.success("Year 5 SUCCESS")
+except ImportError as e:
+    st.error(f"Year 5 failed: {e}")
 
-All variables in file:
+st.subheader("Year 7 Maths")
+try:
+    from statements_year7_Maths import maths_bank as y7_maths
+    st.success("Year 7 SUCCESS")
+except ImportError as e:
+    st.error(f"Year 7 failed: {e}")
 
-[
-0:"attitude_bank"
-1:"closer_bank"
-2:"maths_bank"
-3:"opening_phrases"
-4:"target_bank"
-]
+st.subheader("Year 8 Maths")
+try:
+    from statements_year8_Maths import maths_bank as y8_maths
+    st.success("Year 8 SUCCESS")
+except ImportError as e:
+    st.error(f"Year 8 failed: {e}")
