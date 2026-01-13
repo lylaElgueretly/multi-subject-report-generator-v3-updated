@@ -1,0 +1,52 @@
+# =========================================
+# IGCSE Chemistry (0620)
+# Year 10 – Cambridge aligned
+# =========================================
+
+opening_phrases = [
+    "Throughout this term,",
+    "During recent Chemistry lessons,",
+    "Across a range of theoretical and practical activities,",
+    "Over the course of this reporting period,",
+    "This term,"
+]
+
+knowledge_statements = [
+    "the student demonstrates secure understanding of key chemical concepts",
+    "the student recalls and applies scientific knowledge accurately",
+    "the student understands atomic structure, elements, and compounds",
+    "the student explains chemical reactions using correct terminology",
+    "the student links chemical concepts to real-life contexts"
+]
+
+practical_statements = [
+    "the student follows laboratory safety rules responsibly",
+    "the student carries out practical investigations accurately",
+    "the student records observations clearly using scientific language",
+    "the student identifies variables in experimental work",
+    "the student uses laboratory equipment with increasing confidence"
+]
+
+analysis_statements = [
+    "the student interprets data from tables, graphs, and charts",
+    "the student analyses results and draws valid conclusions",
+    "the student applies chemical knowledge to unfamiliar situations",
+    "the student uses evidence to support explanations",
+    "the student identifies patterns and trends in data"
+]
+
+exam_statements = [
+    "the student answers structured questions with increasing confidence",
+    "the student applies command words such as describe and explain correctly",
+    "the student balances chemical equations accurately",
+    "the student approaches IGCSE-style questions effectively",
+    "the student manages time appropriately in assessments"
+]
+
+closing_statements = [
+    "Continued revision will support further progress.",
+    "Regular practice is recommended to consolidate understanding.",
+    "The student is progressing steadily towards IGCSE expectations.",
+    "Focused exam preparation will support improvement.",
+    "The student is encouraged to review key topics consistently."
+]
