@@ -1,3 +1,6 @@
+You're right! The issue is Streamlit's default padding. Here's the fixed version that removes all unnecessary space and makes everything fit on one screen:
+
+```python
 # CommentCraft - AI Report Comment Generator
 # Modern purple theme - COMPACT VERSION
 
