@@ -1,6 +1,5 @@
-# Version 2.0 - Cache buster
-# MULTI-SUBJECT REPORT COMMENT GENERATOR
-# Supports: English, Science, Maths, ESL, Chemistry
+# CommentCraft - AI Report Comment Generator
+# Modern purple theme
 
 import streamlit as st
 import tempfile
@@ -26,12 +25,141 @@ MAX_FILE_SIZE_MB = 5
 MAX_ROWS_PER_UPLOAD = 100
 RATE_LIMIT_SECONDS = 10
 
-# PAGE CONFIGURATION
+# PAGE CONFIGURATION WITH PURPLE THEME
 st.set_page_config(
     page_title="CommentCraft",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
+    page_icon="📝"
 )
+
+# Apply custom CSS for purple theme
+st.markdown("""
+<style>
+    /* Purple theme colors */
+    :root {
+        --primary: #7B1FA2;
+        --primary-dark: #4A0072;
+        --primary-light: #AE52D4;
+        --secondary: #E1BEE7;
+        --background: #FAF5FF;
+        --surface: #FFFFFF;
+        --text: #212121;
+        --text-light: #757575;
+        --border: #D1C4E9;
+    }
+    
+    /* Center title */
+    .centered-title {
+        text-align: center;
+        color: var(--primary);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-weight: 300;
+        letter-spacing: 2px;
+        margin-bottom: 1rem;
+        font-size: 3rem;
+    }
+    
+    /* Purple buttons */
+    .stButton > button {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 2rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .stButton > button:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(123, 31, 162, 0.3);
+    }
+    
+    /* Purple form inputs */
+    .stSelectbox, .stTextInput, .stTextArea {
+        border-radius: 6px;
+    }
+    
+    .stSelectbox > div > div {
+        border-color: var(--border) !important;
+    }
+    
+    .stSelectbox > div > div:hover {
+        border-color: var(--primary) !important;
+    }
+    
+    /* Purple radio buttons */
+    .stRadio > div {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .stRadio > div > label {
+        background-color: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 0.75rem 1rem;
+        transition: all 0.2s ease;
+    }
+    
+    .stRadio > div > label:hover {
+        border-color: var(--primary);
+        background-color: var(--secondary);
+    }
+    
+    .stRadio > div > label[data-baseweb="radio"] > div:first-child > div {
+        border-color: var(--primary) !important;
+    }
+    
+    /* Purple metrics */
+    .stMetric {
+        background-color: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1rem;
+    }
+    
+    /* Sidebar styling */
+    .css-1d391kg, .css-12oz5g7 {
+        background-color: var(--background);
+    }
+    
+    /* Remove default Streamlit branding */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* Purple success/warning */
+    .stSuccess {
+        background-color: #E8F5E9;
+        border-left: 4px solid #4CAF50;
+    }
+    
+    .stWarning {
+        background-color: #FFF3E0;
+        border-left: 4px solid #FF9800;
+    }
+    
+    .stError {
+        background-color: #FFEBEE;
+        border-left: 4px solid #F44336;
+    }
+    
+    /* Purple info boxes */
+    .stInfo {
+        background-color: #F3E5F5;
+        border-left: 4px solid var(--primary);
+    }
+    
+    /* Make everything more compact */
+    .main .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+</style>
+""", unsafe_allow_html=True)
 
 # SECURITY INITIALIZATION
 if 'app_initialized' not in st.session_state:
@@ -594,25 +722,26 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
 
 # STREAMLIT APP LAYOUT
 
-# Sidebar for navigation
+# Sidebar for navigation - MINIMAL
 with st.sidebar:
-    st.title("CommentCraft")
-    st.caption("Your AI report writing assistant")
+    st.markdown("<h3 style='text-align: center; color: #7B1FA2;'>CommentCraft</h3>", unsafe_allow_html=True)
     
     app_mode = st.radio(
-        "Choose Mode",
-        ["Single Student", "Batch Upload", "Privacy Info"]
+        "",
+        ["Single Student", "Batch Upload", "Privacy Info"],
+        label_visibility="collapsed"
     )
     
     st.markdown("---")
-    st.markdown("### Privacy Features")
-    st.info("""
-    - No data stored on servers
-    - All processing in memory
-    - Auto-deletion of temp files
-    - Input sanitization
-    - Rate limiting enabled
-    """)
+    
+    with st.expander("Privacy Features", expanded=False):
+        st.info("""
+        - No data stored on servers
+        - All processing in memory
+        - Auto-deletion of temp files
+        - Input sanitization
+        - Rate limiting enabled
+        """)
     
     if st.button("Clear All Data", type="secondary", use_container_width=True):
         st.session_state.clear()
@@ -623,13 +752,14 @@ with st.sidebar:
         st.rerun()
 
 # Main content area
-st.title("CommentCraft")
+st.markdown("<h1 class='centered-title'>CommentCraft</h1>", unsafe_allow_html=True)
 
-# Privacy notice
-st.warning("""
-**Privacy Notice:** All data is processed in memory only. No files are stored on servers. 
-Close browser tab to completely erase all data. For use with anonymized student data only.
-""")
+# Privacy notice - minimal
+with st.expander("🔒 Privacy Notice", expanded=False):
+    st.warning("""
+    All data is processed in memory only. No files are stored on servers. 
+    Close browser tab to completely erase all data. For use with anonymized student data only.
+    """)
 
 # SINGLE STUDENT MODE
 if app_mode == "Single Student":
@@ -661,7 +791,7 @@ if app_mode == "Single Student":
                                      placeholder="Add any additional comments here...",
                                      height=60)
         
-        submitted = st.form_submit_button("Generate Comment")
+        submitted = st.form_submit_button("Generate Comment", use_container_width=True)
     
     if submitted and name:
         if not validate_upload_rate():
@@ -712,7 +842,7 @@ if app_mode == "Single Student":
         st.session_state.all_comments.append(student_entry)
         
         # Add another button
-        if st.button("Add Another Student"):
+        if st.button("Add Another Student", use_container_width=True):
             st.rerun()
 
 # BATCH UPLOAD MODE
@@ -762,7 +892,7 @@ Maria,Female,Chemistry,11,80,85,80"""
             with st.expander("Preview Data"):
                 st.dataframe(df.head())
             
-            if st.button("Generate All Comments"):
+            if st.button("Generate All Comments", use_container_width=True):
                 if 'all_comments' not in st.session_state:
                     st.session_state.all_comments = []
                 
@@ -788,7 +918,7 @@ Maria,Female,Chemistry,11,80,85,80"""
                             'subject': str(row.get('Subject', 'English')),
                             'year': int(row.get('Year', 7)),
                             'comment': comment,
-                            'timestamp': datetime.now().strftime("%Y-%m-d %H:%M")
+                            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M")
                         }
                         st.session_state.all_comments.append(student_entry)
                         
@@ -845,7 +975,7 @@ if 'all_comments' in st.session_state and st.session_state.all_comments:
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        if st.button("Word Document"):
+        if st.button("Word Document", use_container_width=True):
             doc = Document()
             doc.add_heading('Report Comments', 0)
             doc.add_paragraph(f'Generated: {datetime.now().strftime("%Y-%m-%d %H:%M")}')
@@ -868,7 +998,7 @@ if 'all_comments' in st.session_state and st.session_state.all_comments:
             )
     
     with col2:
-        if st.button("CSV Export"):
+        if st.button("CSV Export", use_container_width=True):
             csv_data = []
             for entry in st.session_state.all_comments:
                 csv_data.append({
@@ -890,11 +1020,11 @@ if 'all_comments' in st.session_state and st.session_state.all_comments:
             )
     
     with col3:
-        if st.button("Clear All", type="secondary"):
+        if st.button("Clear All", type="secondary", use_container_width=True):
             st.session_state.all_comments = []
             st.success("All comments cleared!")
             st.rerun()
 
 # FOOTER
 st.markdown("---")
-st.caption("CommentCraft v4.0 • Secure & Private")
+st.markdown("<p style='text-align: center; color: #7B1FA2; font-size: 0.9rem;'>CommentCraft • Secure & Private</p>", unsafe_allow_html=True)
