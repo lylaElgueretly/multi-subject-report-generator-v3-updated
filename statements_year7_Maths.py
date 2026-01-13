@@ -25,8 +25,8 @@ attitude_bank = {
     0:  "required significant support to participate in mathematical learning"
 }
 
-# This is the ACHIEVEMENT bank - using number_and_algebra_bank
-number_and_algebra_bank = {
+# FIXED: Renamed from number_and_algebra_bank to maths_bank
+maths_bank = {
     90: "confidently solved complex problems involving fractions, percentages, ratios, and simple algebra, explaining reasoning clearly",
     85: "applied number and algebraic skills accurately to solve unfamiliar problems",
     80: "demonstrated secure understanding of fractions, decimals, percentages, and basic algebra",
@@ -37,34 +37,6 @@ number_and_algebra_bank = {
     55: "needed structured guidance to work with algebra or fractions",
     40: "found algebraic reasoning and number operations challenging",
     0: "was unable to apply number or algebra skills without significant help"
-}
-
-# Additional bank for variety (optional use)
-geometry_and_measurement_bank = {
-    90: "reasoned confidently about properties of shapes, angles, and measurements, using methods accurately",
-    85: "applied geometric and measurement skills to a variety of tasks effectively",
-    80: "understood angles, shapes, and measurement concepts and used them correctly",
-    75: "used geometric reasoning and measurement methods with some guidance",
-    70: "applied basic properties of shapes and measurement with support",
-    65: "showed developing understanding of geometry and measurement",
-    60: "needed reminders and guidance to apply geometric or measurement methods",
-    55: "required step-by-step support to reason about shapes or angles",
-    40: "struggled to reason about geometric problems independently",
-    0: "needed significant support to work with geometric or measurement concepts"
-}
-
-# Additional bank for variety (optional use)
-problem_solving_and_reasoning_bank = {
-    90: "tackled multi-step problems with strategic thinking and explained reasoning clearly",
-    85: "solved problems systematically and justified solutions effectively",
-    80: "applied reasoning strategies to reach logical conclusions",
-    75: "used structured methods to approach problem-solving tasks",
-    70: "completed familiar problem-solving tasks with guidance",
-    65: "followed step-by-step approaches to solve problems with support",
-    60: "attempted problem-solving tasks but needed help with reasoning",
-    55: "required guidance for solving unfamiliar problems",
-    40: "struggled to approach problems independently",
-    0: "was unable to attempt problem-solving without significant assistance"
 }
 
 target_bank = {
