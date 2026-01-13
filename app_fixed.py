@@ -1,3 +1,7 @@
+import os
+import sys
+sys.path.insert(0, os.path.abspath('.'))
+
 # Version 2.0 - Cache buster
 # MULTI-SUBJECT REPORT COMMENT GENERATOR
 # Supports: English, Science, Maths, ESL, Chemistry
