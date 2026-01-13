@@ -34,17 +34,37 @@ st.markdown("""
         padding-bottom: 1rem !important;
     }
     
-    /* Center the title */
+    /* Center the title and make it black */
     h1 {
         text-align: center !important;
         margin-bottom: 0.5rem !important;
+        color: #000000 !important;
     }
     
-    /* Remove all colored borders, shadows, boxes */
-    .stAlert, .stWarning, .stSuccess, .stInfo, .stError {
+    /* Yellow background for privacy notice */
+    div[data-testid="stAlert"]:has(svg[data-testid="WarningIcon"]) {
+        background-color: #FFEB3B !important;
+        padding: 0.5rem 1rem !important;
+        border-radius: 4px !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    /* Make privacy notice fit on one line */
+    div[data-testid="stAlert"]:has(svg[data-testid="WarningIcon"]) > div {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+    
+    /* Remove all colored borders, shadows, boxes except yellow privacy */
+    .stAlert:not(:has(svg[data-testid="WarningIcon"])), 
+    .stWarning:not(:has(svg[data-testid="WarningIcon"])), 
+    .stSuccess, 
+    .stInfo, 
+    .stError {
         border: none !important;
         box-shadow: none !important;
-        background-color: #ffffff !important;
+        background-color: #f8f8f8 !important;
     }
     
     /* Remove colored borders from buttons and inputs */
@@ -56,38 +76,45 @@ st.markdown("""
     /* Remove colored borders from radio buttons */
     .stRadio > div {
         border: none !important;
+        background-color: white !important;
     }
     
-    /* Remove colored highlights */
+    /* Remove colored highlights from inputs */
     .st-bb, .st-at, .st-af {
         border-color: #cccccc !important;
     }
     
-    /* Style the "Add Another" button with purple background */
+    /* PURPLE BUTTONS - Consistent purple shade (#8A2BE2) */
+    
+    /* Main action buttons */
+    .stButton > button:not(:has-text("Clear All Data")):not(:has-text("Clear All")):not([kind="secondary"]) {
+        background-color: #8A2BE2 !important;
+        color: white !important;
+        border: none !important;
+    }
+    
+    /* Submit/Generate button */
+    .stButton > button:has-text("Generate Comment"),
+    .stButton > button:has-text("Generate All Comments") {
+        background-color: #8A2BE2 !important;
+        color: white !important;
+        border: none !important;
+    }
+    
+    /* Add Another button */
     div[data-testid="stButton"] button:has-text("Add Another Student") {
         background-color: #8A2BE2 !important;
         color: white !important;
         border: none !important;
     }
     
-    /* Style CSV download button with purple */
+    /* CSV download buttons */
     div[data-testid="stButton"] button:has-text("Download Example CSV"),
-    div[data-testid="stDownloadButton"] button:has-text("Download CSV") {
+    div[data-testid="stDownloadButton"] button:has-text("Download CSV"),
+    div[data-testid="stButton"] button:has-text("Download Word File") {
         background-color: #8A2BE2 !important;
         color: white !important;
         border: none !important;
-    }
-    
-    /* Style the box next to CSV */
-    .stDownloadButton > button {
-        background-color: #8A2BE2 !important;
-        color: white !important;
-        border: none !important;
-    }
-    
-    /* Purple title */
-    h1 {
-        color: #8A2BE2 !important;
     }
     
     /* Make all backgrounds white */
@@ -98,7 +125,8 @@ st.markdown("""
     /* Remove any gradient backgrounds */
     div[data-testid="stSidebar"],
     .css-1d391kg,
-    .css-1lcbmhc {
+    .css-1lcbmhc,
+    .css-18e3th9 {
         background-color: white !important;
     }
     
@@ -112,13 +140,124 @@ st.markdown("""
         color: #333333 !important;
     }
     
-    /* Remove progress bar colors */
+    /* Purple progress bars */
     .stProgress > div > div {
         background-color: #f0f0f0 !important;
     }
     
     .stProgress > div > div > div {
         background-color: #8A2BE2 !important;
+    }
+    
+    /* Remove blue from selected radio button */
+    .stRadio > div > label > div:first-child {
+        background-color: white !important;
+        border-color: #cccccc !important;
+    }
+    
+    /* Purple for checked radio button */
+    .stRadio > div > label > div:first-child > div {
+        background-color: #8A2BE2 !important;
+    }
+    
+    /* Remove blue from tabs/navigation */
+    .stTabs [data-baseweb="tab"] {
+        background-color: white !important;
+        color: #333333 !important;
+    }
+    
+    /* Remove blue from selected tab */
+    .stTabs [aria-selected="true"] {
+        background-color: #f0f0f0 !important;
+        color: #333333 !important;
+        border-color: #cccccc !important;
+    }
+    
+    /* Remove blue from select boxes */
+    .stSelectbox > div > div {
+        background-color: white !important;
+        border-color: #cccccc !important;
+    }
+    
+    /* Remove blue from text areas */
+    .stTextArea > div > div {
+        background-color: white !important;
+        border-color: #cccccc !important;
+    }
+    
+    /* Purple button hover effects */
+    .stButton > button:not(:has-text("Clear All Data")):not(:has-text("Clear All")):not([kind="secondary"]):hover,
+    .stButton > button:has-text("Generate Comment"):hover,
+    .stButton > button:has-text("Generate All Comments"):hover,
+    div[data-testid="stButton"] button:has-text("Add Another Student"):hover,
+    div[data-testid="stButton"] button:has-text("Download Example CSV"):hover,
+    div[data-testid="stDownloadButton"] button:has-text("Download CSV"):hover,
+    div[data-testid="stButton"] button:has-text("Download Word File"):hover {
+        background-color: #7a1bd2 !important;
+    }
+    
+    /* Grey hover for clear buttons */
+    .stButton > button:has-text("Clear All Data"):hover,
+    .stButton > button:has-text("Clear All"):hover {
+        background-color: #f0f0f0 !important;
+        border-color: #cccccc !important;
+    }
+    
+    /* Remove blue from form borders */
+    .stForm {
+        border-color: #cccccc !important;
+    }
+    
+    /* Remove blue from expander headers */
+    .streamlit-expanderHeader {
+        background-color: white !important;
+        border-color: #cccccc !important;
+    }
+    
+    /* Remove blue from success/warning/info boxes */
+    [data-testid="stAlert"]:not(:has(svg[data-testid="WarningIcon"])) {
+        background-color: #f8f8f8 !important;
+    }
+    
+    /* Remove any remaining blue backgrounds */
+    .st-emotion-cache-1v0mbdj {
+        background-color: white !important;
+    }
+    
+    /* Fix sidebar radio button selected state */
+    .stRadio > div[role="radiogroup"] > label[data-baseweb="radio"] > div:first-child {
+        border-color: #cccccc !important;
+    }
+    
+    .stRadio > div[role="radiogroup"] > label[data-baseweb="radio"] > div:first-child > div {
+        background-color: #8A2BE2 !important;
+    }
+    
+    /* Remove blue from metric containers */
+    [data-testid="stMetricContainer"] {
+        border: none !important;
+        background-color: white !important;
+    }
+    
+    /* Make all form elements white */
+    .stTextInput > div > div > input,
+    .stSelectbox > div > div > div,
+    .stTextArea > div > div > textarea {
+        background-color: white !important;
+    }
+    
+    /* Clear buttons styling (secondary buttons) */
+    .stButton > button[kind="secondary"] {
+        background-color: white !important;
+        color: #333333 !important;
+        border: 1px solid #cccccc !important;
+    }
+    
+    /* Form submit button styling */
+    [data-testid="baseButton-secondary"] {
+        background-color: #8A2BE2 !important;
+        color: white !important;
+        border: none !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -725,14 +864,11 @@ with st.sidebar:
         st.success("All data cleared!")
         st.rerun()
 
-# Main content area - CENTERED TITLE
+# Main content area - CENTERED BLACK TITLE
 st.markdown("<h1>CommentCraft</h1>", unsafe_allow_html=True)
 
-# Privacy notice - removed colors
-st.warning("""
-**Privacy Notice:** All data is processed in memory only. No files are stored on servers. 
-Close browser tab to completely erase all data. For use with anonymized student data only.
-""")
+# Privacy notice - YELLOW BACKGROUND, ONE LINE
+st.warning("**Privacy Notice:** All data is processed in memory only. No files are stored on servers. Close browser tab to completely erase all data. For use with anonymized student data only.")
 
 # SINGLE STUDENT MODE
 if app_mode == "Single Student":
