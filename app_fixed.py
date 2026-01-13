@@ -1,5 +1,5 @@
 # CommentCraft - AI Report Comment Generator
-# Modern purple theme
+# Modern purple theme - COMPACT VERSION
 
 import streamlit as st
 import tempfile
@@ -25,82 +25,174 @@ MAX_FILE_SIZE_MB = 5
 MAX_ROWS_PER_UPLOAD = 100
 RATE_LIMIT_SECONDS = 10
 
-# PAGE CONFIGURATION WITH PURPLE THEME
+# PAGE CONFIGURATION WITH PURPLE THEME - MINIMAL PADDING
 st.set_page_config(
     page_title="CommentCraft",
     layout="wide",
-    initial_sidebar_state="expanded",
-    page_icon="📝"
+    initial_sidebar_state="expanded"
 )
 
-# Apply custom CSS for purple theme
+# Apply custom CSS for purple theme - REMOVES ALL EXTRA SPACE
 st.markdown("""
 <style>
+    /* REMOVE ALL DEFAULT PADDING AND MARGINS */
+    .main .block-container {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    
+    /* Remove top padding from the app */
+    .css-18e3th9 {
+        padding-top: 0rem !important;
+    }
+    
     /* Purple theme colors */
     :root {
-        --primary: #7B1FA2;
-        --primary-dark: #4A0072;
-        --primary-light: #AE52D4;
-        --secondary: #E1BEE7;
+        --primary: #9C27B0;
+        --primary-dark: #6A1B9A;
+        --primary-light: #CE93D8;
+        --secondary: #F3E5F5;
         --background: #FAF5FF;
         --surface: #FFFFFF;
         --text: #212121;
         --text-light: #757575;
-        --border: #D1C4E9;
+        --border: #E1BEE7;
     }
     
-    /* Center title */
+    /* Compact centered title - NO MARGIN */
     .centered-title {
         text-align: center;
         color: var(--primary);
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-weight: 300;
-        letter-spacing: 2px;
-        margin-bottom: 1rem;
-        font-size: 3rem;
+        font-weight: 400;
+        letter-spacing: 1px;
+        margin: 0 0 0.5rem 0 !important;
+        padding: 0 !important;
+        font-size: 2.5rem;
+        line-height: 1.1;
     }
     
-    /* Purple buttons */
+    /* Make form inputs more compact */
+    .stTextInput, .stSelectbox, .stTextArea {
+        margin-bottom: 0.3rem !important;
+    }
+    
+    /* Primary purple buttons */
     .stButton > button {
         background-color: var(--primary);
         color: white;
         border: none;
-        border-radius: 8px;
-        padding: 0.5rem 2rem;
+        border-radius: 6px;
+        padding: 0.3rem 1rem;
         font-weight: 500;
-        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        margin: 0.2rem 0;
+        height: auto;
+        min-height: 2rem;
     }
     
     .stButton > button:hover {
         background-color: var(--primary-dark);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(123, 31, 162, 0.3);
     }
     
-    /* Purple form inputs */
-    .stSelectbox, .stTextInput, .stTextArea {
-        border-radius: 6px;
+    /* Secondary button style - matches your screenshot */
+    .stButton > button[kind="secondary"] {
+        background-color: var(--secondary);
+        color: var(--primary);
+        border: 1px solid var(--primary-light);
     }
     
-    .stSelectbox > div > div {
-        border-color: var(--border) !important;
+    .stButton > button[kind="secondary"]:hover {
+        background-color: var(--primary-light);
+        color: white;
     }
     
-    .stSelectbox > div > div:hover {
-        border-color: var(--primary) !important;
+    /* Compact sidebar */
+    section[data-testid="stSidebar"] {
+        padding-top: 0.5rem !important;
     }
     
-    /* Purple radio buttons */
+    /* Sidebar expandable */
+    [data-testid="stSidebarNav"] {
+        background-color: var(--background);
+    }
+    
+    /* Make everything tighter */
+    .stSubheader {
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Reduce space between form elements */
+    .stForm {
+        margin-top: 0.3rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+    
+    /* Compact columns */
+    .stColumn {
+        padding: 0.2rem !important;
+    }
+    
+    /* Remove default Streamlit branding */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* Reduce space in expanders */
+    .streamlit-expanderHeader {
+        padding: 0.3rem 0.5rem !important;
+        font-size: 0.9rem;
+    }
+    
+    /* Make metrics compact */
+    .stMetric {
+        padding: 0.3rem !important;
+        margin: 0.1rem !important;
+        font-size: 0.9rem;
+    }
+    
+    /* Purple info boxes - compact */
+    .stInfo {
+        background-color: var(--secondary);
+        border-left: 3px solid var(--primary);
+        padding: 0.3rem 0.5rem !important;
+        margin: 0.3rem 0 !important;
+        font-size: 0.85rem;
+    }
+    
+    /* Compact warning */
+    .stWarning {
+        padding: 0.3rem 0.5rem !important;
+        margin: 0.3rem 0 !important;
+        font-size: 0.85rem;
+    }
+    
+    /* Make text areas smaller */
+    .stTextArea textarea {
+        min-height: 2rem !important;
+        height: 4rem !important;
+    }
+    
+    /* Remove extra space from radio buttons */
+    .stRadio {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
     .stRadio > div {
-        flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.2rem !important;
     }
     
     .stRadio > div > label {
+        padding: 0.3rem 0.5rem !important;
+        margin: 0 !important;
+        font-size: 0.85rem;
         background-color: var(--surface);
         border: 1px solid var(--border);
         border-radius: 6px;
-        padding: 0.75rem 1rem;
         transition: all 0.2s ease;
     }
     
@@ -109,54 +201,32 @@ st.markdown("""
         background-color: var(--secondary);
     }
     
-    .stRadio > div > label[data-baseweb="radio"] > div:first-child > div {
-        border-color: var(--primary) !important;
-    }
-    
-    /* Purple metrics */
-    .stMetric {
-        background-color: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 1rem;
-    }
-    
-    /* Sidebar styling */
-    .css-1d391kg, .css-12oz5g7 {
-        background-color: var(--background);
-    }
-    
-    /* Remove default Streamlit branding */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    
-    /* Purple success/warning */
+    /* Success and error styling */
     .stSuccess {
         background-color: #E8F5E9;
-        border-left: 4px solid #4CAF50;
-    }
-    
-    .stWarning {
-        background-color: #FFF3E0;
-        border-left: 4px solid #FF9800;
+        border-left: 3px solid #4CAF50;
+        padding: 0.3rem 0.5rem !important;
     }
     
     .stError {
         background-color: #FFEBEE;
-        border-left: 4px solid #F44336;
+        border-left: 3px solid #F44336;
+        padding: 0.3rem 0.5rem !important;
     }
     
-    /* Purple info boxes */
-    .stInfo {
-        background-color: #F3E5F5;
-        border-left: 4px solid var(--primary);
+    /* Make comment box smaller */
+    .stTextArea [data-baseweb="textarea"] {
+        min-height: 6rem !important;
+        max-height: 12rem !important;
     }
     
-    /* Make everything more compact */
-    .main .block-container {
-        padding-top: 2rem;
-        padding-bottom: 2rem;
+    /* Purple sidebar header */
+    .sidebar-header {
+        color: var(--primary);
+        text-align: center;
+        margin: 0 0 0.5rem 0;
+        font-size: 1.2rem;
+        font-weight: 500;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -595,7 +665,7 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
                 closer_sentence
             ]
             
-        else:  # Year 8
+        else:  # Year 8:
             opening = random.choice(opening_8_math)
             attitude_text = fix_pronouns_in_text(attitude_8_math[att], p, p_poss)
             attitude_sentence = f"{opening} {name} {attitude_text}"
@@ -692,18 +762,15 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         # Default fallback if subject not recognized
         comment_parts = [f"{name} has worked in {subject} this term."]
     
-    # Add optional text if provided - NOW AT THE END
+    # Add optional text if provided - AT THE END, NO TRANSITION
     if optional_text:
         optional_text = sanitize_input(optional_text)
         if optional_text:
-            optional_sentence = f"Additionally, {lowercase_first(optional_text)}"
+            optional_sentence = optional_text
             if not optional_sentence.endswith('.'):
                 optional_sentence += '.'
-            # Insert before the closer sentence (second to last position)
-            if comment_parts:
-                comment_parts.insert(-1, optional_sentence)
-            else:
-                comment_parts.append(optional_sentence)
+            # Add to the end (after closer)
+            comment_parts.append(optional_sentence)
     
     # Ensure all sentences end with period
     for i in range(len(comment_parts)):
@@ -722,9 +789,9 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
 
 # STREAMLIT APP LAYOUT
 
-# Sidebar for navigation - MINIMAL
+# Sidebar for navigation - ULTRA COMPACT
 with st.sidebar:
-    st.markdown("<h3 style='text-align: center; color: #7B1FA2;'>CommentCraft</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 class='sidebar-header'>CommentCraft</h3>", unsafe_allow_html=True)
     
     app_mode = st.radio(
         "",
@@ -751,11 +818,11 @@ with st.sidebar:
         st.success("All data cleared!")
         st.rerun()
 
-# Main content area
+# Main content area - NO EXTRA SPACE
 st.markdown("<h1 class='centered-title'>CommentCraft</h1>", unsafe_allow_html=True)
 
 # Privacy notice - minimal
-with st.expander("🔒 Privacy Notice", expanded=False):
+with st.expander("Privacy Notice", expanded=False):
     st.warning("""
     All data is processed in memory only. No files are stored on servers. 
     Close browser tab to completely erase all data. For use with anonymized student data only.
@@ -775,19 +842,19 @@ if app_mode == "Single Student":
             gender = st.selectbox("Gender", ["Male", "Female"])
         
         with col2:
-            att = st.selectbox("Attitude Band", 
+            att = st.selectbox("Attitude", 
                              options=[90,85,80,75,70,65,60,55,40],
                              index=3)
             
-            achieve = st.selectbox("Achievement Band",
+            achieve = st.selectbox("Achievement",
                                  options=[90,85,80,75,70,65,60,55,40],
                                  index=3)
             
-            target = st.selectbox("Target Band",
+            target = st.selectbox("Target",
                                 options=[90,85,80,75,70,65,60,55,40],
                                 index=3)
         
-        attitude_target = st.text_area("Optional Additional Comment",
+        attitude_target = st.text_area("Additional Comment (Optional)",
                                      placeholder="Add any additional comments here...",
                                      height=60)
         
@@ -814,17 +881,17 @@ if app_mode == "Single Student":
         
         # Display comment
         st.subheader("Generated Comment")
-        st.text_area("", comment, height=200)
+        st.text_area("", comment, height=150)
         
         # Stats
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.metric("Character Count", f"{char_count}/500")
+            st.metric("Characters", f"{char_count}/500")
         with col2:
             st.metric("Words", len(comment.split()))
         with col3:
             if char_count < 450:
-                st.success("Good length")
+                st.success("Good")
             else:
                 st.warning("Near limit")
         
@@ -850,29 +917,22 @@ elif app_mode == "Batch Upload":
     st.subheader("Batch Upload (CSV)")
     
     st.info("""
-    **CSV Format Required:**
-    - Columns: Student Name, Gender, Subject, Year, Attitude, Achievement, Target
-    - Gender: Male/Female
-    - Subject: English/Maths/Science/ESL (IGCSE)/Chemistry
-    - Year: 5,7,8,10,11
-    - Bands: 90,85,80,75,70,65,60,55,40
+    **CSV Format:**
+    Columns: Student Name, Gender, Subject, Year, Attitude, Achievement, Target
     """)
     
-    # Example CSV
     example_csv = """Student Name,Gender,Subject,Year,Attitude,Achievement,Target
 John,Male,English,7,75,80,85
-Sarah,Female,Maths,5,80,75,80
-Ahmed,Male,ESL (IGCSE),10,85,90,85
-Maria,Female,Chemistry,11,80,85,80"""
+Sarah,Female,Maths,5,80,75,80"""
     
     st.download_button(
-        label="Download Example CSV",
+        label="Example CSV",
         data=example_csv,
-        file_name="example_students.csv",
+        file_name="example.csv",
         mime="text/csv"
     )
     
-    uploaded_file = st.file_uploader("Choose CSV file", type=['csv'])
+    uploaded_file = st.file_uploader("Upload CSV", type=['csv'])
     
     if uploaded_file:
         if not validate_upload_rate():
@@ -883,16 +943,13 @@ Maria,Female,Chemistry,11,80,85,80"""
             st.error(msg)
             st.stop()
         
-        with st.spinner("Processing CSV..."):
+        with st.spinner("Processing..."):
             df = process_csv_securely(uploaded_file)
         
         if df is not None:
             st.success(f"Processed {len(df)} students")
             
-            with st.expander("Preview Data"):
-                st.dataframe(df.head())
-            
-            if st.button("Generate All Comments", use_container_width=True):
+            if st.button("Generate Comments", use_container_width=True):
                 if 'all_comments' not in st.session_state:
                     st.session_state.all_comments = []
                 
@@ -923,7 +980,7 @@ Maria,Female,Chemistry,11,80,85,80"""
                         st.session_state.all_comments.append(student_entry)
                         
                     except Exception as e:
-                        st.error(f"Error processing row {idx + 1}: {e}")
+                        st.error(f"Error row {idx + 1}: {e}")
                 
                 progress_bar.empty()
                 st.success(f"Generated {len(df)} comments!")
@@ -1027,4 +1084,4 @@ if 'all_comments' in st.session_state and st.session_state.all_comments:
 
 # FOOTER
 st.markdown("---")
-st.markdown("<p style='text-align: center; color: #7B1FA2; font-size: 0.9rem;'>CommentCraft • Secure & Private</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #9C27B0; font-size: 0.9rem;'>CommentCraft • Secure & Private</p>", unsafe_allow_html=True)
