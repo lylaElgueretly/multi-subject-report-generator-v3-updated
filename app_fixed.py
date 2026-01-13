@@ -806,19 +806,6 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         # Default fallback if subject not recognized
         comment_parts = [f"{name} has worked in {subject} this term."]
     
-    # Add optional text if provided - NOW AT THE END
-    if optional_text:
-        optional_text = sanitize_input(optional_text)
-        if optional_text:
-            optional_sentence = f"Additionally, {lowercase_first(optional_text)}"
-            if not optional_sentence.endswith('.'):
-                optional_sentence += '.'
-            # Insert before the closer sentence (second to last position)
-            if comment_parts:
-                comment_parts.insert(-1, optional_sentence)
-            else:
-                comment_parts.append(optional_sentence)
-    
     # Ensure all sentences end with period
     for i in range(len(comment_parts)):
         if not comment_parts[i].endswith('.'):
@@ -826,6 +813,29 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
     
     # Join comment parts
     comment = " ".join([c for c in comment_parts if c])
+    
+    # ADD OPTIONAL TEXT AT THE VERY END (AFTER the closing statement)
+    if optional_text:
+        optional_text = sanitize_input(optional_text)
+        if optional_text:
+            # Ensure optional text starts with capital letter and ends with period
+            if not optional_text[0].isupper():
+                optional_text = optional_text[0].upper() + optional_text[1:]
+            if not optional_text.endswith('.'):
+                optional_text += '.'
+            
+            # Add to the end of the comment with proper punctuation
+            # Check if the current comment already ends with a period
+            if comment.endswith('.'):
+                # Add space and "Additionally, ..." after the period
+                comment = comment.rstrip('. ') + '. '
+            else:
+                # Add period first, then "Additionally, ..."
+                comment = comment.rstrip('. ') + '. '
+            
+            comment += f"Additionally, {lowercase_first(optional_text)}"
+    
+    # Truncate after adding optional text
     comment = truncate_comment(comment, TARGET_CHARS)
     
     # Ensure comment ends with period
