@@ -147,17 +147,6 @@ except ImportError as e:
     st.error("Please ensure all statement files are in the repository.")
     st.stop()
 
-# DIAGNOSTIC - Remove after fixing
-st.write("DEBUG: Testing imports...")
-try:
-    import statements_year5_Maths as test_module
-    st.write("Available in Year 5 Maths:", dir(test_module))
-    st.write("Has maths_bank?", hasattr(test_module, 'maths_bank'))
-    st.write("Has number_bank?", hasattr(test_module, 'number_bank'))
-except Exception as e:
-    st.error(f"Import test failed: {e}")
-st.stop()  # Stop here to see the debug info
-
 # SECURITY FUNCTIONS
 def validate_upload_rate():
     """Prevent rapid-fire uploads/abuse"""
