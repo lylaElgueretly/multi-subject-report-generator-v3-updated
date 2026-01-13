@@ -508,14 +508,15 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             closer_sentence
         ]
     
-    # Add optional text if provided
+        # Add optional text if provided
     if optional_text:
         optional_text = sanitize_input(optional_text)
         if optional_text:
             optional_sentence = f"Additionally, {lowercase_first(optional_text)}"
             if not optional_sentence.endswith('.'):
                 optional_sentence += '.'
-            comment_parts.insert(1, optional_sentence)
+            # Insert before the last element (closer_sentence)
+            comment_parts.insert(-1, optional_sentence)  # <-- Changed from 1 to -1
     
     # Ensure all sentences end with period
     for i in range(len(comment_parts)):
