@@ -94,7 +94,7 @@ try:
     )
 
     # Maths
-    from statements_year5_Maths import (
+    from statements_year5_Maths_NEW import (
         opening_phrases as opening_5_math,
         attitude_bank as attitude_5_math,
         maths_bank as maths_5_math,
@@ -102,7 +102,7 @@ try:
         closer_bank as closer_5_math
     )
     
-    from statements_year7_Maths import (
+    from statements_year7_Maths_NEW import (
         opening_phrases as opening_7_math,
         attitude_bank as attitude_7_math,
         maths_bank as maths_7_math,
@@ -110,7 +110,7 @@ try:
         closer_bank as closer_7_math
     )
 
-    from statements_year8_Maths import (
+    from statements_year8_Maths_NEW import (
         opening_phrases as opening_8_math,
         attitude_bank as attitude_8_math,
         maths_bank as maths_8_math,
