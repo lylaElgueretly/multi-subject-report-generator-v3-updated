@@ -282,6 +282,24 @@ if 'app_initialized' not in st.session_state:
     st.session_state.upload_count = 0
     st.session_state.last_upload_time = datetime.now()
     st.session_state.generated_files = []
+    
+# Initialize session state for form persistence
+if 'subject' not in st.session_state:
+    st.session_state.subject = "English"
+if 'year' not in st.session_state:
+    st.session_state.year = 7
+if 'name' not in st.session_state:
+    st.session_state.name = ""
+if 'gender' not in st.session_state:
+    st.session_state.gender = "Male"
+if 'att' not in st.session_state:
+    st.session_state.att = 75
+if 'achieve' not in st.session_state:
+    st.session_state.achieve = 75
+if 'target' not in st.session_state:
+    st.session_state.target = 75
+if 'attitude_target' not in st.session_state:
+    st.session_state.attitude_target = ""
 
 # IMPORT STATEMENT FILES (directly from repository)
 try:
@@ -814,7 +832,7 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
     # Join comment parts
     comment = " ".join([c for c in comment_parts if c])
     
-    # ADD OPTIONAL TEXT AT THE VERY END (AFTER the closing statement)
+    # ADD OPTIONAL TEXT AT THE VERY END (AFTER EVERYTHING ELSE)
     if optional_text:
         optional_text = sanitize_input(optional_text)
         if optional_text:
@@ -825,15 +843,12 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
                 optional_text += '.'
             
             # Add to the end of the comment with proper punctuation
-            # Check if the current comment already ends with a period
-            if comment.endswith('.'):
-                # Add space and "Additionally, ..." after the period
-                comment = comment.rstrip('. ') + '. '
+            if comment.strip().endswith('.'):
+                comment = comment.rstrip()
+                comment = comment[:-1]  # Remove the last period
+                comment += f". Additionally, {lowercase_first(optional_text)}"
             else:
-                # Add period first, then "Additionally, ..."
-                comment = comment.rstrip('. ') + '. '
-            
-            comment += f"Additionally, {lowercase_first(optional_text)}"
+                comment += f". Additionally, {lowercase_first(optional_text)}"
     
     # Truncate after adding optional text
     comment = truncate_comment(comment, TARGET_CHARS)
@@ -853,7 +868,8 @@ with st.sidebar:
     
     app_mode = st.radio(
         "Choose Mode",
-        ["Single Student", "Batch Upload", "Privacy Info"]
+        ["Single Student", "Batch Upload", "Privacy Info"],
+        key="app_mode"
     )
     
     st.markdown("---")
@@ -871,6 +887,15 @@ with st.sidebar:
         st.session_state.app_initialized = True
         st.session_state.upload_count = 0
         st.session_state.last_upload_time = datetime.now()
+        # Reinitialize session state for form persistence
+        st.session_state.subject = "English"
+        st.session_state.year = 7
+        st.session_state.name = ""
+        st.session_state.gender = "Male"
+        st.session_state.att = 75
+        st.session_state.achieve = 75
+        st.session_state.target = 75
+        st.session_state.attitude_target = ""
         st.success("All data cleared!")
         st.rerun()
 
@@ -884,33 +909,82 @@ st.warning("**Privacy Notice:** All data is processed in memory only. No files a
 if app_mode == "Single Student":
     st.subheader("Single Student Entry")
     
-    with st.form("single_student_form", clear_on_submit=True):
+    with st.form("single_student_form"):
         col1, col2 = st.columns(2)
         
         with col1:
-            subject = st.selectbox("Subject", ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"])
-            year = st.selectbox("Year", [5, 7, 8, 10, 11])
-            name = st.text_input("Student Name", placeholder="Enter first name only")
-            gender = st.selectbox("Gender", ["Male", "Female"])
+            subject = st.selectbox(
+                "Subject", 
+                ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"],
+                index=["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"].index(st.session_state.subject) 
+                if st.session_state.subject in ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"] 
+                else 0,
+                key="subject_select"
+            )
+            
+            year = st.selectbox(
+                "Year", 
+                [5, 7, 8, 10, 11],
+                index=[5, 7, 8, 10, 11].index(st.session_state.year) if st.session_state.year in [5, 7, 8, 10, 11] else 1,
+                key="year_select"
+            )
+            
+            name = st.text_input(
+                "Student Name", 
+                placeholder="Enter first name only",
+                value=st.session_state.name,
+                key="name_input"
+            )
+            
+            gender = st.selectbox(
+                "Gender", 
+                ["Male", "Female"],
+                index=0 if st.session_state.gender == "Male" else 1,
+                key="gender_select"
+            )
         
         with col2:
-            att = st.selectbox("Attitude Band", 
-                             options=[90,85,80,75,70,65,60,55,40],
-                             index=3)
+            att = st.selectbox(
+                "Attitude Band", 
+                options=[90,85,80,75,70,65,60,55,40],
+                index=[90,85,80,75,70,65,60,55,40].index(st.session_state.att) if st.session_state.att in [90,85,80,75,70,65,60,55,40] else 3,
+                key="att_select"
+            )
             
-            achieve = st.selectbox("Achievement Band",
-                                 options=[90,85,80,75,70,65,60,55,40],
-                                 index=3)
+            achieve = st.selectbox(
+                "Achievement Band",
+                options=[90,85,80,75,70,65,60,55,40],
+                index=[90,85,80,75,70,65,60,55,40].index(st.session_state.achieve) if st.session_state.achieve in [90,85,80,75,70,65,60,55,40] else 3,
+                key="achieve_select"
+            )
             
-            target = st.selectbox("Target Band",
-                                options=[90,85,80,75,70,65,60,55,40],
-                                index=3)
+            target = st.selectbox(
+                "Target Band",
+                options=[90,85,80,75,70,65,60,55,40],
+                index=[90,85,80,75,70,65,60,55,40].index(st.session_state.target) if st.session_state.target in [90,85,80,75,70,65,60,55,40] else 3,
+                key="target_select"
+            )
         
-        attitude_target = st.text_area("Optional Additional Comment",
-                                     placeholder="Add any additional comments here...",
-                                     height=60)
+        attitude_target = st.text_area(
+            "Optional Additional Comment",
+            placeholder="Add any additional comments here...",
+            height=60,
+            value=st.session_state.attitude_target,
+            key="optional_text_area"
+        )
         
         submitted = st.form_submit_button("Generate Comment")
+        
+        if submitted:
+            # Update session state with current values
+            st.session_state.subject = subject
+            st.session_state.year = year
+            st.session_state.name = name
+            st.session_state.gender = gender
+            st.session_state.att = att
+            st.session_state.achieve = achieve
+            st.session_state.target = target
+            st.session_state.attitude_target = attitude_target
     
     if submitted and name:
         if not validate_upload_rate():
@@ -933,7 +1007,7 @@ if app_mode == "Single Student":
         
         # Display comment
         st.subheader("Generated Comment")
-        st.text_area("", comment, height=200)
+        st.text_area("", comment, height=200, key="generated_comment")
         
         # Stats
         col1, col2, col3 = st.columns(3)
@@ -962,6 +1036,9 @@ if app_mode == "Single Student":
         
         # Add another button - PURPLE BACKGROUND
         if st.button("Add Another Student"):
+            # Keep the current subject and year, but clear other fields
+            st.session_state.name = ""
+            st.session_state.attitude_target = ""
             st.rerun()
 
 # BATCH UPLOAD MODE
@@ -1038,7 +1115,7 @@ Maria,Female,Chemistry,11,80,85,80"""
                             'subject': str(row.get('Subject', 'English')),
                             'year': int(row.get('Year', 7)),
                             'comment': comment,
-                            'timestamp': datetime.now().strftime("%Y-%m-d %H:%M")
+                            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M")
                         }
                         st.session_state.all_comments.append(student_entry)
                         
