@@ -931,4 +931,74 @@ elif app_mode == "Privacy Info":
     """)
 
 # DOWNLOAD SECTION
-if 'all_comments' in st.session_state
+if 'all_comments' in st.session_state and st.session_state.all_comments:
+    st.markdown("---")
+    st.subheader("Download Reports")
+    
+    total_comments = len(st.session_state.all_comments)
+    st.info(f"You have {total_comments} generated comment(s)")
+    
+    # Preview
+    with st.expander(f"Preview Comments ({total_comments})"):
+        for idx, entry in enumerate(st.session_state.all_comments, 1):
+            st.markdown(f"**{idx}. {entry['name']}** ({entry['subject']} Year {entry['year']})")
+            st.write(entry['comment'])
+            st.markdown("---")
+    
+    # Download options
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        if st.button("Word Document"):
+            doc = Document()
+            doc.add_heading('Report Comments', 0)
+            doc.add_paragraph(f'Generated: {datetime.now().strftime("%Y-%m-%d %H:%M")}')
+            doc.add_paragraph(f'Total Students: {total_comments}')
+            doc.add_paragraph('')
+            
+            for entry in st.session_state.all_comments:
+                doc.add_heading(f"{entry['name']} - {entry['subject']} Year {entry['year']}", level=2)
+                doc.add_paragraph(entry['comment'])
+                doc.add_paragraph('')
+            
+            bio = io.BytesIO()
+            doc.save(bio)
+            
+            st.download_button(
+                label="Download Word File",
+                data=bio.getvalue(),
+                file_name=f"report_comments_{datetime.now().strftime('%Y%m%d_%H%M')}.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            )
+    
+    with col2:
+        if st.button("CSV Export"):
+            csv_data = []
+            for entry in st.session_state.all_comments:
+                csv_data.append({
+                    'Student Name': entry['name'],
+                    'Subject': entry['subject'],
+                    'Year': entry['year'],
+                    'Comment': entry['comment'],
+                    'Generated': entry['timestamp']
+                })
+            
+            df_export = pd.DataFrame(csv_data)
+            csv_bytes = df_export.to_csv(index=False).encode('utf-8')
+            
+            st.download_button(
+                label="Download CSV",
+                data=csv_bytes,
+                file_name=f"report_comments_{datetime.now().strftime('%Y%m%d_%H%M')}.csv",
+                mime="text/csv"
+            )
+    
+    with col3:
+        if st.button("Clear All", type="secondary"):
+            st.session_state.all_comments = []
+            st.success("All comments cleared!")
+            st.rerun()
+
+# FOOTER
+st.markdown("---")
+st.caption("CommentCraft v4.0 • Secure & Private")
