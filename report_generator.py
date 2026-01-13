@@ -35,8 +35,6 @@ if 'app_initialized' not in st.session_state:
 # IMPORT STATEMENT FILES (directly from repository)
 try:
     # English
-   try:
-    # English
     from statements_year5_English import (
         opening_phrases as opening_5_eng,
         attitude_bank as attitude_5_eng,
@@ -56,6 +54,7 @@ try:
         writing_target_bank as target_write_7_eng,
         closer_bank as closer_7_eng
     )
+
     from statements_year8_English import (
         opening_phrases as opening_8_eng,
         attitude_bank as attitude_8_eng,
