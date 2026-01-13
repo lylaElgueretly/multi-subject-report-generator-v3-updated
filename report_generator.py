@@ -1,5 +1,5 @@
 # MULTI-SUBJECT REPORT COMMENT GENERATOR
-# Supports: English, Science, ESL (IGCSE), Chemistry
+# Supports: English, Science, Maths, ESL, Chemistry
 
 import streamlit as st
 import tempfile
@@ -32,10 +32,20 @@ if 'app_initialized' not in st.session_state:
     st.session_state.last_upload_time = datetime.now()
     st.session_state.generated_files = []
 
-# IMPORT STATEMENT BANKS
+# IMPORT STATEMENT FILES (directly from repository)
 try:
-    # English Year 7
-    from statement_banks.english_year7 import (
+    # English
+    from statements_year5_English import (
+        opening_phrases as opening_5_eng,
+        attitude_bank as attitude_5_eng,
+        reading_bank as reading_5_eng,
+        writing_bank as writing_5_eng,
+        reading_target_bank as target_5_eng,
+        writing_target_bank as target_write_5_eng,
+        closer_bank as closer_5_eng
+    )
+    
+    from statements_year7_English import (
         opening_phrases as opening_7_eng,
         attitude_bank as attitude_7_eng,
         reading_bank as reading_7_eng,
@@ -45,8 +55,7 @@ try:
         closer_bank as closer_7_eng
     )
 
-    # English Year 8
-    from statement_banks.english_year8 import (
+    from statements_year8_English import (
         opening_phrases as opening_8_eng,
         attitude_bank as attitude_8_eng,
         reading_bank as reading_8_eng,
@@ -56,8 +65,16 @@ try:
         closer_bank as closer_8_eng
     )
 
-    # Science Year 7
-    from statement_banks.science_year7 import (
+    # Science
+    from statements_year5_Science import (
+        opening_phrases as opening_5_sci,
+        attitude_bank as attitude_5_sci,
+        science_bank as science_5_sci,
+        target_bank as target_5_sci,
+        closer_bank as closer_5_sci
+    )
+    
+    from statements_year7_science import (
         opening_phrases as opening_7_sci,
         attitude_bank as attitude_7_sci,
         science_bank as science_7_sci,
@@ -65,8 +82,7 @@ try:
         closer_bank as closer_7_sci
     )
 
-    # Science Year 8
-    from statement_banks.science_year8 import (
+    from statements_year8_science import (
         opening_phrases as opening_8_sci,
         attitude_bank as attitude_8_sci,
         science_bank as science_8_sci,
@@ -74,8 +90,33 @@ try:
         closer_bank as closer_8_sci
     )
 
-    # ESL IGCSE
-    from statement_banks.esl_igcse import (
+    # Maths
+    from statements_year5_Maths import (
+        opening_phrases as opening_5_math,
+        attitude_bank as attitude_5_math,
+        maths_bank as maths_5_math,
+        target_bank as target_5_math,
+        closer_bank as closer_5_math
+    )
+    
+    from statements_year7_Maths import (
+        opening_phrases as opening_7_math,
+        attitude_bank as attitude_7_math,
+        maths_bank as maths_7_math,
+        target_bank as target_7_math,
+        closer_bank as closer_7_math
+    )
+
+    from statements_year8_Maths import (
+        opening_phrases as opening_8_math,
+        attitude_bank as attitude_8_math,
+        maths_bank as maths_8_math,
+        target_bank as target_8_math,
+        closer_bank as closer_8_math
+    )
+
+    # ESL (IGCSE)
+    from statements_igcse_0510_esl import (
         opening_phrases as opening_esl,
         attitude_bank as attitude_esl,
         reading_bank as reading_esl,
@@ -89,27 +130,18 @@ try:
         closer_bank as closer_esl
     )
 
-    # Chemistry Year 7
-    from statement_banks.chemistry_year7 import (
-        opening_phrases as opening_7_chem,
-        attitude_bank as attitude_7_chem,
-        chemistry_bank as chemistry_7_chem,
-        target_bank as target_7_chem,
-        closer_bank as closer_7_chem
-    )
-
-    # Chemistry Year 8
-    from statement_banks.chemistry_year8 import (
-        opening_phrases as opening_8_chem,
-        attitude_bank as attitude_8_chem,
-        chemistry_bank as chemistry_8_chem,
-        target_bank as target_8_chem,
-        closer_bank as closer_8_chem
+    # Chemistry
+    from statements_igcse_0620_chemistry import (
+        opening_phrases as opening_chem,
+        attitude_bank as attitude_chem,
+        chemistry_bank as chemistry_chem,
+        target_bank as target_chem,
+        closer_bank as closer_chem
     )
 
 except ImportError as e:
     st.error(f"Missing required statement files: {e}")
-    st.error("Please ensure all statement bank files are in the 'statement_banks' folder.")
+    st.error("Please ensure all statement files are in the repository.")
     st.stop()
 
 # SECURITY FUNCTIONS
@@ -214,7 +246,30 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
     
     # Subject-specific comment generation
     if subject == "English":
-        if year == 7:
+        if year == 5:
+            opening = random.choice(opening_5_eng)
+            attitude_text = fix_pronouns_in_text(attitude_5_eng[att], p, p_poss)
+            attitude_sentence = f"{opening} {name} {attitude_text}"
+            
+            reading_text = fix_pronouns_in_text(reading_5_eng[achieve], p, p_poss)
+            if reading_text[0].islower():
+                reading_text = f"{p} {reading_text}"
+            reading_sentence = f"In reading, {reading_text}"
+            
+            writing_text = fix_pronouns_in_text(writing_5_eng[achieve], p, p_poss)
+            if writing_text[0].islower():
+                writing_text = f"{p} {writing_text}"
+            writing_sentence = f"In writing, {writing_text}"
+            
+            reading_target_text = fix_pronouns_in_text(target_5_eng[target], p, p_poss)
+            reading_target_sentence = f"For the next term, {p} should {lowercase_first(reading_target_text)}"
+            
+            writing_target_text = fix_pronouns_in_text(target_write_5_eng[target], p, p_poss)
+            writing_target_sentence = f"Additionally, {p} should {lowercase_first(writing_target_text)}"
+            
+            closer_sentence = random.choice(closer_5_eng)
+            
+        elif year == 7:
             opening = random.choice(opening_7_eng)
             attitude_text = fix_pronouns_in_text(attitude_7_eng[att], p, p_poss)
             attitude_sentence = f"{opening} {name} {attitude_text}"
@@ -270,7 +325,22 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         ]
         
     elif subject == "Science":
-        if year == 7:
+        if year == 5:
+            opening = random.choice(opening_5_sci)
+            attitude_text = fix_pronouns_in_text(attitude_5_sci[att], p, p_poss)
+            attitude_sentence = f"{opening} {name} {attitude_text}"
+            
+            science_text = fix_pronouns_in_text(science_5_sci[achieve], p, p_poss)
+            if science_text[0].islower():
+                science_text = f"{p} {science_text}"
+            science_sentence = science_text
+            
+            target_text = fix_pronouns_in_text(target_5_sci[target], p, p_poss)
+            target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
+            
+            closer_sentence = random.choice(closer_5_sci)
+            
+        elif year == 7:
             opening = random.choice(opening_7_sci)
             attitude_text = fix_pronouns_in_text(attitude_7_sci[att], p, p_poss)
             attitude_sentence = f"{opening} {name} {attitude_text}"
@@ -303,6 +373,59 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         comment_parts = [
             attitude_sentence,
             science_sentence,
+            target_sentence,
+            closer_sentence
+        ]
+        
+    elif subject == "Maths":
+        if year == 5:
+            opening = random.choice(opening_5_math)
+            attitude_text = fix_pronouns_in_text(attitude_5_math[att], p, p_poss)
+            attitude_sentence = f"{opening} {name} {attitude_text}"
+            
+            maths_text = fix_pronouns_in_text(maths_5_math[achieve], p, p_poss)
+            if maths_text[0].islower():
+                maths_text = f"{p} {maths_text}"
+            maths_sentence = maths_text
+            
+            target_text = fix_pronouns_in_text(target_5_math[target], p, p_poss)
+            target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
+            
+            closer_sentence = random.choice(closer_5_math)
+            
+        elif year == 7:
+            opening = random.choice(opening_7_math)
+            attitude_text = fix_pronouns_in_text(attitude_7_math[att], p, p_poss)
+            attitude_sentence = f"{opening} {name} {attitude_text}"
+            
+            maths_text = fix_pronouns_in_text(maths_7_math[achieve], p, p_poss)
+            if maths_text[0].islower():
+                maths_text = f"{p} {maths_text}"
+            maths_sentence = maths_text
+            
+            target_text = fix_pronouns_in_text(target_7_math[target], p, p_poss)
+            target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
+            
+            closer_sentence = random.choice(closer_7_math)
+            
+        else:  # Year 8
+            opening = random.choice(opening_8_math)
+            attitude_text = fix_pronouns_in_text(attitude_8_math[att], p, p_poss)
+            attitude_sentence = f"{opening} {name} {attitude_text}"
+            
+            maths_text = fix_pronouns_in_text(maths_8_math[achieve], p, p_poss)
+            if maths_text[0].islower():
+                maths_text = f"{p} {maths_text}"
+            maths_sentence = maths_text
+            
+            target_text = fix_pronouns_in_text(target_8_math[target], p, p_poss)
+            target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
+            
+            closer_sentence = random.choice(closer_8_math)
+            
+        comment_parts = [
+            attitude_sentence,
+            maths_sentence,
             target_sentence,
             closer_sentence
         ]
@@ -357,36 +480,20 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         ]
         
     elif subject == "Chemistry":
-        if year == 7:
-            opening = random.choice(opening_7_chem)
-            attitude_text = fix_pronouns_in_text(attitude_7_chem[att], p, p_poss)
-            attitude_sentence = f"{opening} {name} {attitude_text}"
-            
-            chemistry_text = fix_pronouns_in_text(chemistry_7_chem[achieve], p, p_poss)
-            if chemistry_text[0].islower():
-                chemistry_text = f"{p} {chemistry_text}"
-            chemistry_sentence = chemistry_text
-            
-            target_text = fix_pronouns_in_text(target_7_chem[target], p, p_poss)
-            target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
-            
-            closer_sentence = random.choice(closer_7_chem)
-            
-        else:  # Year 8
-            opening = random.choice(opening_8_chem)
-            attitude_text = fix_pronouns_in_text(attitude_8_chem[att], p, p_poss)
-            attitude_sentence = f"{opening} {name} {attitude_text}"
-            
-            chemistry_text = fix_pronouns_in_text(chemistry_8_chem[achieve], p, p_poss)
-            if chemistry_text[0].islower():
-                chemistry_text = f"{p} {chemistry_text}"
-            chemistry_sentence = chemistry_text
-            
-            target_text = fix_pronouns_in_text(target_8_chem[target], p, p_poss)
-            target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
-            
-            closer_sentence = random.choice(closer_8_chem)
-            
+        opening = random.choice(opening_chem)
+        attitude_text = fix_pronouns_in_text(attitude_chem[att], p, p_poss)
+        attitude_sentence = f"{opening} {name} {attitude_text}"
+        
+        chemistry_text = fix_pronouns_in_text(chemistry_chem[achieve], p, p_poss)
+        if chemistry_text[0].islower():
+            chemistry_text = f"{p} {chemistry_text}"
+        chemistry_sentence = chemistry_text
+        
+        target_text = fix_pronouns_in_text(target_chem[target], p, p_poss)
+        target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
+        
+        closer_sentence = random.choice(closer_chem)
+        
         comment_parts = [
             attitude_sentence,
             chemistry_sentence,
@@ -449,7 +556,7 @@ with st.sidebar:
 
 # Main content area
 st.title("Multi-Subject Report Comment Generator")
-st.caption("Supports: English, Science, ESL (IGCSE), Chemistry | Target: 500 characters per comment")
+st.caption("Supports: English, Maths, Science, ESL (IGCSE), Chemistry | Years: 5, 7, 8 | Target: 500 characters per comment")
 
 # Privacy notice
 st.warning("""
@@ -465,8 +572,8 @@ if app_mode == "Single Student":
         col1, col2 = st.columns(2)
         
         with col1:
-            subject = st.selectbox("Subject", ["English", "Science", "ESL (IGCSE)", "Chemistry"])
-            year = st.selectbox("Year", [7, 8, 9, 10, 11])
+            subject = st.selectbox("Subject", ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"])
+            year = st.selectbox("Year", [5, 7, 8, 10, 11])
             name = st.text_input("Student Name", placeholder="Enter first name only")
             gender = st.selectbox("Gender", ["Male", "Female"])
         
@@ -549,15 +656,15 @@ elif app_mode == "Batch Upload":
     **CSV Format Required:**
     - Columns: Student Name, Gender, Subject, Year, Attitude, Achievement, Target
     - Gender: Male/Female
-    - Subject: English/Science/ESL (IGCSE)/Chemistry
-    - Year: 7-11
+    - Subject: English/Maths/Science/ESL (IGCSE)/Chemistry
+    - Year: 5,7,8,10,11
     - Bands: 90,85,80,75,70,65,60,55,40
     """)
     
     # Example CSV
     example_csv = """Student Name,Gender,Subject,Year,Attitude,Achievement,Target
 John,Male,English,7,75,80,85
-Sarah,Female,Science,8,80,75,80
+Sarah,Female,Maths,5,80,75,80
 Ahmed,Male,ESL (IGCSE),10,85,90,85
 Maria,Female,Chemistry,11,80,85,80"""
     
