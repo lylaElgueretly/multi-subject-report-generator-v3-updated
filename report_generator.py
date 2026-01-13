@@ -12,6 +12,8 @@ import re
 from datetime import datetime, timedelta
 from docx import Document
 
+import sys
+sys.dont_write_bytecode = True
 # SECURITY & PRIVACY SETTINGS
 TARGET_CHARS = 500
 MAX_FILE_SIZE_MB = 5
