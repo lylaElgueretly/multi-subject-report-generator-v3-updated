@@ -1,8 +1,4 @@
 # statements_year5_Maths.py
-# Year 5 Maths statement banks
-# Curriculum-aligned (UK National Curriculum) and tailored to Year 5 learners
-# Voice specific to Maths, not a paraphrase of English statements
-# FIXED STRUCTURE to match app requirements
 
 opening_phrases = [
     "This year in Maths,",
@@ -25,7 +21,6 @@ attitude_bank = {
     0:  "required substantial support to participate in Maths learning"
 }
 
-# FIXED: Renamed from number_bank to maths_bank
 maths_bank = {
     90: "calculated with precision, applied mental strategies fluently, and explored number patterns confidently",
     85: "used mental and written methods accurately and showed clear understanding of place value",
