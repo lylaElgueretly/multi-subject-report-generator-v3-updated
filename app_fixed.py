@@ -41,12 +41,14 @@ st.markdown("""
         color: #000000 !important;
     }
     
-    /* Yellow background for privacy notice */
+    /* PURPLE background for privacy notice */
     div[data-testid="stAlert"]:has(svg[data-testid="WarningIcon"]) {
-        background-color: #FFEB3B !important;
+        background-color: #8A2BE2 !important;
+        color: white !important;
         padding: 0.5rem 1rem !important;
         border-radius: 4px !important;
         margin-bottom: 1rem !important;
+        border: none !important;
     }
     
     /* Make privacy notice fit on one line */
@@ -54,9 +56,15 @@ st.markdown("""
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
+        color: white !important;
     }
     
-    /* Remove all colored borders, shadows, boxes except yellow privacy */
+    /* Remove yellow warning icon color */
+    div[data-testid="stAlert"]:has(svg[data-testid="WarningIcon"]) svg {
+        color: white !important;
+    }
+    
+    /* Remove all colored borders, shadows, boxes except purple privacy */
     .stAlert:not(:has(svg[data-testid="WarningIcon"])), 
     .stWarning:not(:has(svg[data-testid="WarningIcon"])), 
     .stSuccess, 
@@ -84,34 +92,35 @@ st.markdown("""
         border-color: #cccccc !important;
     }
     
-    /* PURPLE BUTTONS - Consistent purple shade (#8A2BE2) */
+    /* PURPLE BUTTONS - ALL action buttons purple (#8A2BE2) */
     
-    /* Main action buttons */
-    .stButton > button:not(:has-text("Clear All Data")):not(:has-text("Clear All")):not([kind="secondary"]) {
+    /* ALL action buttons - purple */
+    .stButton > button,
+    .stDownloadButton > button,
+    div[data-testid="stButton"] button {
         background-color: #8A2BE2 !important;
         color: white !important;
         border: none !important;
     }
     
-    /* Submit/Generate button */
+    /* Specific buttons to ensure they're purple */
     .stButton > button:has-text("Generate Comment"),
-    .stButton > button:has-text("Generate All Comments") {
-        background-color: #8A2BE2 !important;
-        color: white !important;
-        border: none !important;
-    }
-    
-    /* Add Another button */
-    div[data-testid="stButton"] button:has-text("Add Another Student") {
-        background-color: #8A2BE2 !important;
-        color: white !important;
-        border: none !important;
-    }
-    
-    /* CSV download buttons */
+    .stButton > button:has-text("Generate All Comments"),
+    .stButton > button:has-text("Add Another Student"),
+    .stButton > button:has-text("Word Document"),
+    .stButton > button:has-text("CSV Export"),
+    .stButton > button:has-text("Clear All"),
+    .stButton > button:has-text("Clear All Data"),
     div[data-testid="stButton"] button:has-text("Download Example CSV"),
     div[data-testid="stDownloadButton"] button:has-text("Download CSV"),
     div[data-testid="stButton"] button:has-text("Download Word File") {
+        background-color: #8A2BE2 !important;
+        color: white !important;
+        border: none !important;
+    }
+    
+    /* Form submit button */
+    [data-testid="baseButton-secondary"] {
         background-color: #8A2BE2 !important;
         color: white !important;
         border: none !important;
@@ -186,21 +195,11 @@ st.markdown("""
     }
     
     /* Purple button hover effects */
-    .stButton > button:not(:has-text("Clear All Data")):not(:has-text("Clear All")):not([kind="secondary"]):hover,
-    .stButton > button:has-text("Generate Comment"):hover,
-    .stButton > button:has-text("Generate All Comments"):hover,
-    div[data-testid="stButton"] button:has-text("Add Another Student"):hover,
-    div[data-testid="stButton"] button:has-text("Download Example CSV"):hover,
-    div[data-testid="stDownloadButton"] button:has-text("Download CSV"):hover,
-    div[data-testid="stButton"] button:has-text("Download Word File"):hover {
+    .stButton > button:hover,
+    .stDownloadButton > button:hover,
+    div[data-testid="stButton"] button:hover,
+    [data-testid="baseButton-secondary"]:hover {
         background-color: #7a1bd2 !important;
-    }
-    
-    /* Grey hover for clear buttons */
-    .stButton > button:has-text("Clear All Data"):hover,
-    .stButton > button:has-text("Clear All"):hover {
-        background-color: #f0f0f0 !important;
-        border-color: #cccccc !important;
     }
     
     /* Remove blue from form borders */
@@ -246,18 +245,13 @@ st.markdown("""
         background-color: white !important;
     }
     
-    /* Clear buttons styling (secondary buttons) */
-    .stButton > button[kind="secondary"] {
-        background-color: white !important;
-        color: #333333 !important;
-        border: 1px solid #cccccc !important;
+    /* Success/error message styling */
+    .stSuccess {
+        background-color: #f0f9f0 !important;
     }
     
-    /* Form submit button styling */
-    [data-testid="baseButton-secondary"] {
-        background-color: #8A2BE2 !important;
-        color: white !important;
-        border: none !important;
+    .stError {
+        background-color: #fdf0f0 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -490,6 +484,204 @@ def fix_pronouns_in_text(text, pronoun, possessive):
     text = re.sub(r'\bherself\b', f"{pronoun}self", text, flags=re.IGNORECASE)
     
     return text
+
+def convert_to_british_spelling(text):
+    """Convert American spelling to British spelling in generated comments"""
+    # Common American to British spelling conversions
+    conversions = {
+        r'\bcolor\b': 'colour',
+        r'\bColor\b': 'Colour',
+        r'\bcolors\b': 'colours',
+        r'\bColors\b': 'Colours',
+        r'\bcolored\b': 'coloured',
+        r'\bColored\b': 'Coloured',
+        r'\bcoloring\b': 'colouring',
+        r'\bColoring\b': 'Colouring',
+        
+        r'\bfavor\b': 'favour',
+        r'\bFavor\b': 'Favour',
+        r'\bfavorite\b': 'favourite',
+        r'\bFavorite\b': 'Favourite',
+        r'\bfavorites\b': 'favourites',
+        r'\bFavorites\b': 'Favourites',
+        
+        r'\bhonor\b': 'honour',
+        r'\bHonor\b': 'Honour',
+        r'\bhonors\b': 'honours',
+        r'\bHonors\b': 'Honours',
+        r'\bhonored\b': 'honoured',
+        r'\bHonored\b': 'Honoured',
+        
+        r'\bhumor\b': 'humour',
+        r'\bHumor\b': 'Humour',
+        r'\bhumorous\b': 'humourous',
+        r'\bHumorous\b': 'Humourous',
+        
+        r'\blabor\b': 'labour',
+        r'\bLabor\b': 'Labour',
+        
+        r'\bneighbor\b': 'neighbour',
+        r'\bNeighbor\b': 'Neighbour',
+        r'\bneighbors\b': 'neighbours',
+        r'\bNeighbors\b': 'Neighbours',
+        r'\bneighborhood\b': 'neighbourhood',
+        r'\bNeighborhood\b': 'Neighbourhood',
+        
+        r'\borganize\b': 'organise',
+        r'\bOrganize\b': 'Organise',
+        r'\borganized\b': 'organised',
+        r'\bOrganized\b': 'Organised',
+        r'\borganizes\b': 'organises',
+        r'\bOrganizes\b': 'Organises',
+        r'\borganizing\b': 'organising',
+        r'\bOrganizing\b': 'Organising',
+        r'\borganization\b': 'organisation',
+        r'\bOrganization\b': 'Organisation',
+        
+        r'\brealize\b': 'realise',
+        r'\bRealize\b': 'Realise',
+        r'\brealized\b': 'realised',
+        r'\bRealized\b': 'Realised',
+        r'\brealizes\b': 'realises',
+        r'\bRealizes\b': 'Realises',
+        r'\brealizing\b': 'realising',
+        r'\bRealizing\b': 'Realising',
+        
+        r'\brecognize\b': 'recognise',
+        r'\bRecognize\b': 'Recognise',
+        r'\brecognized\b': 'recognised',
+        r'\bRecognized\b': 'Recognised',
+        r'\brecognizes\b': 'recognises',
+        r'\bRecognizes\b': 'Recognises',
+        r'\brecognizing\b': 'recognising',
+        r'\bRecognizing\b': 'Recognising',
+        
+        r'\banalyze\b': 'analyse',
+        r'\bAnalyze\b': 'Analyse',
+        r'\banalyzed\b': 'analysed',
+        r'\bAnalyzed\b': 'Analysed',
+        r'\banalyzes\b': 'analyses',
+        r'\bAnalyzes\b': 'Analyses',
+        r'\banalyzing\b': 'analysing',
+        r'\bAnalyzing\b': 'Analysing',
+        
+        r'\bapologize\b': 'apologise',
+        r'\bApologize\b': 'Apologise',
+        r'\bapologized\b': 'apologised',
+        r'\bApologized\b': 'Apologised',
+        r'\bapologizes\b': 'apologises',
+        r'\bApologizes\b': 'Apologises',
+        r'\bapologizing\b': 'apologising',
+        r'\bApologizing\b': 'Apologising',
+        
+        r'\bcenter\b': 'centre',
+        r'\bCenter\b': 'Centre',
+        r'\bcenters\b': 'centres',
+        r'\bCenters\b': 'Centres',
+        r'\bcentered\b': 'centred',
+        r'\bCentered\b': 'Centred',
+        
+        r'\btheater\b': 'theatre',
+        r'\bTheater\b': 'Theatre',
+        r'\btheaters\b': 'theatres',
+        r'\bTheaters\b': 'Theatres',
+        
+        r'\bmeter\b': 'metre',
+        r'\bMeter\b': 'Metre',
+        r'\bmeters\b': 'metres',
+        r'\bMeters\b': 'Metres',
+        
+        r'\bliter\b': 'litre',
+        r'\bLiter\b': 'Litre',
+        r'\bliters\b': 'litres',
+        r'\bLiters\b': 'Litres',
+        
+        r'\bprogram\b': 'programme',
+        r'\bProgram\b': 'Programme',
+        r'\bprograms\b': 'programmes',
+        r'\bPrograms\b': 'Programmes',
+        
+        r'\btraveled\b': 'travelled',
+        r'\bTraveled\b': 'Travelled',
+        r'\btraveling\b': 'travelling',
+        r'\bTraveling\b': 'Travelling',
+        r'\btraveler\b': 'traveller',
+        r'\bTraveler\b': 'Traveller',
+        
+        r'\bcanceled\b': 'cancelled',
+        r'\bCanceled\b': 'Cancelled',
+        r'\bcanceling\b': 'cancelling',
+        r'\bCanceling\b': 'Cancelling',
+        
+        r'\blabeled\b': 'labelled',
+        r'\bLabeled\b': 'Labelled',
+        r'\blabeling\b': 'labelling',
+        r'\bLabeling\b': 'Labelling',
+        
+        r'\bmodeled\b': 'modelled',
+        r'\bModeled\b': 'Modelled',
+        r'\bmodeling\b': 'modelling',
+        r'\bModeling\b': 'Modelling',
+        
+        r'\bsignaled\b': 'signalled',
+        r'\bSignaled\b': 'Signalled',
+        r'\bsignaling\b': 'signalling',
+        r'\bSignaling\b': 'Signalling',
+        
+        r'\bdefense\b': 'defence',
+        r'\bDefense\b': 'Defence',
+        
+        r'\blicense\b': 'licence',
+        r'\bLicense\b': 'Licence',
+        
+        r'\boffense\b': 'offence',
+        r'\bOffense\b': 'Offence',
+        
+        r'\bpractice\s+(as a noun)\b': 'practice',  # Keep as is for noun
+        r'\bpractice\s+(as a verb)\b': 'practise',  # Change for verb
+        r'\bto practice\b': 'to practise',
+        r'\bpracticing\b': 'practising',
+        r'\bPracticing\b': 'Practising',
+        
+        r'\bbehavior\b': 'behaviour',
+        r'\bBehavior\b': 'Behaviour',
+        
+        r'\bendeavor\b': 'endeavour',
+        r'\bEndeavor\b': 'Endeavour',
+        
+        r'\bjudgment\b': 'judgement',
+        r'\bJudgment\b': 'Judgement',
+        
+        r'\bcheck\b': 'cheque',  # financial
+        r'\bCheck\b': 'Cheque',
+        
+        r'\bcheck\b': 'tick',  # mark
+        r'\bCheck\b': 'Tick',
+        
+        r'\bairplane\b': 'aeroplane',
+        r'\bAirplane\b': 'Aeroplane',
+        
+        r'\baluminum\b': 'aluminium',
+        r'\bAluminum\b': 'Aluminium',
+        
+        r'\bgray\b': 'grey',
+        r'\bGray\b': 'Grey',
+        
+        r'\bmom\b': 'mum',
+        r'\bMom\b': 'Mum',
+        
+        r'\bmath\b': 'maths',
+        r'\bMath\b': 'Maths',
+    }
+    
+    # Apply conversions
+    british_text = text
+    for american, british in conversions.items():
+        # Remove the description from pattern if present
+        pattern = american.split(r'\s+(')[0] if '(' in american else american
+        british_text = re.sub(pattern, british, british_text, flags=re.IGNORECASE)
+    
+    return british_text
 
 def generate_comment(subject, year, name, gender, att, achieve, target, optional_text=None):
     """Generate a report comment based on subject, year, and performance bands"""
@@ -806,18 +998,15 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         # Default fallback if subject not recognized
         comment_parts = [f"{name} has worked in {subject} this term."]
     
-    # Add optional text if provided - NOW AT THE END
+    # Add optional text if provided - AT THE END
     if optional_text:
         optional_text = sanitize_input(optional_text)
         if optional_text:
             optional_sentence = f"Additionally, {lowercase_first(optional_text)}"
             if not optional_sentence.endswith('.'):
                 optional_sentence += '.'
-            # Insert before the closer sentence (second to last position)
-            if comment_parts:
-                comment_parts.insert(-1, optional_sentence)
-            else:
-                comment_parts.append(optional_sentence)
+            # ADD AT THE VERY END (append to the end of comment_parts)
+            comment_parts.append(optional_sentence)
     
     # Ensure all sentences end with period
     for i in range(len(comment_parts)):
@@ -826,6 +1015,10 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
     
     # Join comment parts
     comment = " ".join([c for c in comment_parts if c])
+    
+    # Convert to British spelling
+    comment = convert_to_british_spelling(comment)
+    
     comment = truncate_comment(comment, TARGET_CHARS)
     
     # Ensure comment ends with period
@@ -867,8 +1060,8 @@ with st.sidebar:
 # Main content area - CENTERED BLACK TITLE
 st.markdown("<h1>CommentCraft</h1>", unsafe_allow_html=True)
 
-# Privacy notice - YELLOW BACKGROUND, ONE LINE
-st.warning("**Privacy Notice:** All data is processed in memory only. No files are stored on servers. Close browser tab to completely erase all data. For use with anonymized student data only.")
+# Privacy notice - PURPLE BACKGROUND, ONE LINE
+st.warning("**Privacy Notice:** All data is processed in memory only. No files are stored on servers. Close browser tab to completely erase all data. For use with anonymised student data only.")
 
 # SINGLE STUDENT MODE
 if app_mode == "Single Student":
