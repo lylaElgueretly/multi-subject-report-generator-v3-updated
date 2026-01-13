@@ -35,15 +35,13 @@ if 'app_initialized' not in st.session_state:
 # IMPORT STATEMENT FILES (directly from repository)
 try:
     # English
-    from statements_year5_English import (
-        opening_phrases as opening_5_eng,
-        attitude_bank as attitude_5_eng,
-        reading_bank as reading_5_eng,
-        writing_bank as writing_5_eng,
-        reading_target_bank as target_5_eng,
-        writing_target_bank as target_write_5_eng,
-        closer_bank as closer_5_eng
-    )
+   from statements_year5_Maths import (
+    opening_phrases as opening_5_math,
+    attitude_bank as attitude_5_math,
+    maths_bank as maths_5_math,  # ← CHANGED from number_bank
+    target_bank as target_5_math,
+    closer_bank as closer_5_math
+)
     
     from statements_year7_English import (
         opening_phrases as opening_7_eng,
