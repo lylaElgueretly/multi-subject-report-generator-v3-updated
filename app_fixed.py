@@ -1,7 +1,3 @@
-import os
-import sys
-sys.path.insert(0, os.path.abspath('.'))
-
 # Version 2.0 - Cache buster
 # MULTI-SUBJECT REPORT COMMENT GENERATOR
 # Supports: English, Science, Maths, ESL, Chemistry
@@ -18,6 +14,12 @@ from docx import Document
 
 import sys
 sys.dont_write_bytecode = True
+
+# Add this at the VERY TOP for import fixes
+import os
+import sys
+sys.path.insert(0, os.path.abspath('.'))
+
 # SECURITY & PRIVACY SETTINGS
 TARGET_CHARS = 500
 MAX_FILE_SIZE_MB = 5
@@ -26,7 +28,7 @@ RATE_LIMIT_SECONDS = 10
 
 # PAGE CONFIGURATION
 st.set_page_config(
-    page_title="Report Comment Generator",
+    page_title="CommentCraft",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -234,8 +236,12 @@ def fix_pronouns_in_text(text, pronoun, possessive):
     # Fix pronouns with word boundaries
     text = re.sub(r'\bhe\b', pronoun, text, flags=re.IGNORECASE)
     text = re.sub(r'\bHe\b', pronoun.capitalize(), text)
+    text = re.sub(r'\bshe\b', pronoun, text, flags=re.IGNORECASE)
+    text = re.sub(r'\bShe\b', pronoun.capitalize(), text)
     text = re.sub(r'\bhis\b', possessive, text, flags=re.IGNORECASE)
     text = re.sub(r'\bHis\b', possessive.capitalize(), text)
+    text = re.sub(r'\bher\b', possessive, text, flags=re.IGNORECASE)
+    text = re.sub(r'\bHer\b', possessive.capitalize(), text)
     text = re.sub(r'\bhim\b', pronoun, text, flags=re.IGNORECASE)
     text = re.sub(r'\bHim\b', pronoun.capitalize(), text)
     text = re.sub(r'\bhimself\b', f"{pronoun}self", text, flags=re.IGNORECASE)
@@ -276,6 +282,15 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             
             closer_sentence = random.choice(closer_5_eng)
             
+            comment_parts = [
+                attitude_sentence,
+                reading_sentence,
+                writing_sentence,
+                reading_target_sentence,
+                writing_target_sentence,
+                closer_sentence
+            ]
+            
         elif year == 7:
             opening = random.choice(opening_7_eng)
             attitude_text = fix_pronouns_in_text(attitude_7_eng[att], p, p_poss)
@@ -298,6 +313,15 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             writing_target_sentence = f"Additionally, {p} should {lowercase_first(writing_target_text)}"
             
             closer_sentence = random.choice(closer_7_eng)
+            
+            comment_parts = [
+                attitude_sentence,
+                reading_sentence,
+                writing_sentence,
+                reading_target_sentence,
+                writing_target_sentence,
+                closer_sentence
+            ]
             
         else:  # Year 8
             opening = random.choice(opening_8_eng)
@@ -322,14 +346,14 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             
             closer_sentence = random.choice(closer_8_eng)
             
-        comment_parts = [
-            attitude_sentence,
-            reading_sentence,
-            writing_sentence,
-            reading_target_sentence,
-            writing_target_sentence,
-            closer_sentence
-        ]
+            comment_parts = [
+                attitude_sentence,
+                reading_sentence,
+                writing_sentence,
+                reading_target_sentence,
+                writing_target_sentence,
+                closer_sentence
+            ]
         
     elif subject == "Science":
         if year == 5:
@@ -347,6 +371,13 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             
             closer_sentence = random.choice(closer_5_sci)
             
+            comment_parts = [
+                attitude_sentence,
+                science_sentence,
+                target_sentence,
+                closer_sentence
+            ]
+            
         elif year == 7:
             opening = random.choice(opening_7_sci)
             attitude_text = fix_pronouns_in_text(attitude_7_sci[att], p, p_poss)
@@ -361,6 +392,13 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
             
             closer_sentence = random.choice(closer_7_sci)
+            
+            comment_parts = [
+                attitude_sentence,
+                science_sentence,
+                target_sentence,
+                closer_sentence
+            ]
             
         else:  # Year 8
             opening = random.choice(opening_8_sci)
@@ -377,12 +415,12 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             
             closer_sentence = random.choice(closer_8_sci)
             
-        comment_parts = [
-            attitude_sentence,
-            science_sentence,
-            target_sentence,
-            closer_sentence
-        ]
+            comment_parts = [
+                attitude_sentence,
+                science_sentence,
+                target_sentence,
+                closer_sentence
+            ]
         
     elif subject == "Maths":
         if year == 5:
@@ -400,6 +438,13 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             
             closer_sentence = random.choice(closer_5_math)
             
+            comment_parts = [
+                attitude_sentence,
+                maths_sentence,
+                target_sentence,
+                closer_sentence
+            ]
+            
         elif year == 7:
             opening = random.choice(opening_7_math)
             attitude_text = fix_pronouns_in_text(attitude_7_math[att], p, p_poss)
@@ -414,6 +459,13 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
             
             closer_sentence = random.choice(closer_7_math)
+            
+            comment_parts = [
+                attitude_sentence,
+                maths_sentence,
+                target_sentence,
+                closer_sentence
+            ]
             
         else:  # Year 8
             opening = random.choice(opening_8_math)
@@ -430,12 +482,12 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             
             closer_sentence = random.choice(closer_8_math)
             
-        comment_parts = [
-            attitude_sentence,
-            maths_sentence,
-            target_sentence,
-            closer_sentence
-        ]
+            comment_parts = [
+                attitude_sentence,
+                maths_sentence,
+                target_sentence,
+                closer_sentence
+            ]
         
     elif subject == "ESL (IGCSE)":
         opening = random.choice(opening_esl)
@@ -508,15 +560,22 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             closer_sentence
         ]
     
-        # Add optional text if provided
+    else:
+        # Default fallback if subject not recognized
+        comment_parts = [f"{name} has worked in {subject} this term."]
+    
+    # Add optional text if provided - NOW AT THE END
     if optional_text:
         optional_text = sanitize_input(optional_text)
         if optional_text:
             optional_sentence = f"Additionally, {lowercase_first(optional_text)}"
             if not optional_sentence.endswith('.'):
                 optional_sentence += '.'
-            # Insert before the last element (closer_sentence)
-            comment_parts.insert(-1, optional_sentence)  # <-- Changed from 1 to -1
+            # Insert before the closer sentence (second to last position)
+            if comment_parts:
+                comment_parts.insert(-1, optional_sentence)
+            else:
+                comment_parts.append(optional_sentence)
     
     # Ensure all sentences end with period
     for i in range(len(comment_parts)):
@@ -537,7 +596,8 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
 
 # Sidebar for navigation
 with st.sidebar:
-    st.title("Navigation")
+    st.title("CommentCraft")
+    st.caption("Your AI report writing assistant")
     
     app_mode = st.radio(
         "Choose Mode",
@@ -563,8 +623,7 @@ with st.sidebar:
         st.rerun()
 
 # Main content area
-st.title("Multi-Subject Report Comment Generator")
-st.caption("Supports: English, Maths, Science, ESL (IGCSE), Chemistry | Years: 5, 7, 8 | Target: 500 characters per comment")
+st.title("CommentCraft")
 
 # Privacy notice
 st.warning("""
@@ -729,7 +788,7 @@ Maria,Female,Chemistry,11,80,85,80"""
                             'subject': str(row.get('Subject', 'English')),
                             'year': int(row.get('Year', 7)),
                             'comment': comment,
-                            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M")
+                            'timestamp': datetime.now().strftime("%Y-%m-d %H:%M")
                         }
                         st.session_state.all_comments.append(student_entry)
                         
@@ -838,4 +897,4 @@ if 'all_comments' in st.session_state and st.session_state.all_comments:
 
 # FOOTER
 st.markdown("---")
-st.caption("Report Generator v3.0 • Multi-Subject Edition")
+st.caption("CommentCraft v4.0 • Secure & Private")
