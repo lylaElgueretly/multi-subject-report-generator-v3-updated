@@ -25,7 +25,8 @@ attitude_bank = {
     0:  "required substantial support to participate in Maths learning"
 }
 
-number_bank = {
+# FIXED: Renamed from number_bank to maths_bank
+maths_bank = {
     90: "calculated with precision, applied mental strategies fluently, and explored number patterns confidently",
     85: "used mental and written methods accurately and showed clear understanding of place value",
     80: "applied number operations correctly and explained reasoning logically",
@@ -36,19 +37,6 @@ number_bank = {
     55: "needed step-by-step support for calculations and concepts",
     40: "struggled with number operations and needed consistent guidance",
     0: "found applying number skills very challenging, even with support"
-}
-
-problem_solving_bank = {
-    90: "approached problem-solving creatively, identifying multiple strategies and checking answers independently",
-    85: "used logical reasoning to solve new problems and could explain steps clearly",
-    80: "applied known strategies successfully to solve problems and showed sound reasoning",
-    75: "attempted problem-solving tasks carefully and used methods correctly",
-    70: "needed some guidance but could solve familiar problems accurately",
-    65: "applied strategies with support and followed problem steps with guidance",
-    60: "attempted simple problems with help but needed structure for more complex tasks",
-    55: "found problem-solving challenging and required detailed guidance",
-    40: "struggled to approach problems independently and needed constant support",
-    0: "was unable to attempt problem-solving without significant guidance"
 }
 
 target_bank = {
