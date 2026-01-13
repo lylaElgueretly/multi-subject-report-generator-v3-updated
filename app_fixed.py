@@ -1,5 +1,6 @@
-# CommentCraft - AI Report Comment Generator
-# Modern purple theme - COMPACT VERSION
+# Version 2.0 - Cache buster
+# MULTI-SUBJECT REPORT COMMENT GENERATOR
+# Supports: English, Science, Maths, ESL, Chemistry
 
 import streamlit as st
 import tempfile
@@ -25,158 +26,12 @@ MAX_FILE_SIZE_MB = 5
 MAX_ROWS_PER_UPLOAD = 100
 RATE_LIMIT_SECONDS = 10
 
-# PAGE CONFIGURATION WITH PURPLE THEME - MINIMAL PADDING
+# PAGE CONFIGURATION
 st.set_page_config(
     page_title="CommentCraft",
     layout="wide",
-    initial_sidebar_state="expanded",
-    page_icon="📝"
+    initial_sidebar_state="expanded"
 )
-
-# Apply custom CSS for purple theme - REMOVES ALL EXTRA SPACE
-st.markdown("""
-<style>
-    /* REMOVE ALL DEFAULT PADDING AND MARGINS */
-    .main .block-container {
-        padding-top: 0.5rem !important;
-        padding-bottom: 0.5rem !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-    }
-    
-    /* Remove top padding from the app */
-    .css-18e3th9 {
-        padding-top: 0rem !important;
-    }
-    
-    /* Purple theme colors */
-    :root {
-        --primary: #7B1FA2;
-        --primary-dark: #4A0072;
-        --primary-light: #AE52D4;
-        --secondary: #E1BEE7;
-        --background: #FAF5FF;
-        --surface: #FFFFFF;
-        --text: #212121;
-        --text-light: #757575;
-        --border: #D1C4E9;
-    }
-    
-    /* Compact centered title - NO MARGIN */
-    .centered-title {
-        text-align: center;
-        color: var(--primary);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-weight: 300;
-        letter-spacing: 1px;
-        margin: 0 0 0.5rem 0 !important;
-        padding: 0 !important;
-        font-size: 2.5rem;
-        line-height: 1.1;
-    }
-    
-    /* Make form inputs more compact */
-    .stTextInput, .stSelectbox, .stTextArea {
-        margin-bottom: 0.3rem !important;
-    }
-    
-    /* Compact buttons */
-    .stButton > button {
-        background-color: var(--primary);
-        color: white;
-        border: none;
-        border-radius: 6px;
-        padding: 0.3rem 1rem;
-        font-weight: 500;
-        font-size: 0.9rem;
-        margin: 0.2rem 0;
-        height: auto;
-        min-height: 2rem;
-    }
-    
-    .stButton > button:hover {
-        background-color: var(--primary-dark);
-    }
-    
-    /* Compact sidebar */
-    section[data-testid="stSidebar"] {
-        padding-top: 0.5rem !important;
-    }
-    
-    /* Make everything tighter */
-    .stSubheader {
-        margin-top: 0.5rem !important;
-        margin-bottom: 0.5rem !important;
-    }
-    
-    /* Reduce space between form elements */
-    .stForm {
-        margin-top: 0.3rem !important;
-        margin-bottom: 0.3rem !important;
-    }
-    
-    /* Compact columns */
-    .stColumn {
-        padding: 0.2rem !important;
-    }
-    
-    /* Remove default Streamlit branding */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    
-    /* Reduce space in expanders */
-    .streamlit-expanderHeader {
-        padding: 0.3rem 0.5rem !important;
-        font-size: 0.9rem;
-    }
-    
-    /* Make metrics compact */
-    .stMetric {
-        padding: 0.3rem !important;
-        margin: 0.1rem !important;
-        font-size: 0.9rem;
-    }
-    
-    /* Purple info boxes - compact */
-    .stInfo {
-        background-color: #F3E5F5;
-        border-left: 3px solid var(--primary);
-        padding: 0.3rem 0.5rem !important;
-        margin: 0.3rem 0 !important;
-        font-size: 0.85rem;
-    }
-    
-    /* Compact warning */
-    .stWarning {
-        padding: 0.3rem 0.5rem !important;
-        margin: 0.3rem 0 !important;
-        font-size: 0.85rem;
-    }
-    
-    /* Make text areas smaller */
-    .stTextArea textarea {
-        min-height: 2rem !important;
-        height: 4rem !important;
-    }
-    
-    /* Remove extra space from radio buttons */
-    .stRadio {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    
-    .stRadio > div {
-        gap: 0.2rem !important;
-    }
-    
-    .stRadio > div > label {
-        padding: 0.3rem 0.5rem !important;
-        margin: 0 !important;
-        font-size: 0.85rem;
-    }
-</style>
-""", unsafe_allow_html=True)
 
 # SECURITY INITIALIZATION
 if 'app_initialized' not in st.session_state:
@@ -739,28 +594,42 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
 
 # STREAMLIT APP LAYOUT
 
-# Sidebar for navigation - ULTRA COMPACT
+# Sidebar for navigation
 with st.sidebar:
-    st.markdown("<h3 style='text-align: center; color: #7B1FA2; margin: 0; padding: 0;'>CommentCraft</h3>", unsafe_allow_html=True)
+    st.title("CommentCraft")
+    st.caption("Your AI report writing assistant")
     
     app_mode = st.radio(
-        "",
-        ["Single Student", "Batch Upload", "Privacy Info"],
-        label_visibility="collapsed"
+        "Choose Mode",
+        ["Single Student", "Batch Upload", "Privacy Info"]
     )
     
     st.markdown("---")
+    st.markdown("### Privacy Features")
+    st.info("""
+    - No data stored on servers
+    - All processing in memory
+    - Auto-deletion of temp files
+    - Input sanitization
+    - Rate limiting enabled
+    """)
     
-    if st.button("Clear Data", type="secondary", use_container_width=True):
+    if st.button("Clear All Data", type="secondary", use_container_width=True):
         st.session_state.clear()
         st.session_state.app_initialized = True
         st.session_state.upload_count = 0
         st.session_state.last_upload_time = datetime.now()
-        st.success("Cleared!")
+        st.success("All data cleared!")
         st.rerun()
 
-# Main content area - NO EXTRA SPACE
-st.markdown("<h1 class='centered-title'>CommentCraft</h1>", unsafe_allow_html=True)
+# Main content area
+st.title("CommentCraft")
+
+# Privacy notice
+st.warning("""
+**Privacy Notice:** All data is processed in memory only. No files are stored on servers. 
+Close browser tab to completely erase all data. For use with anonymized student data only.
+""")
 
 # SINGLE STUDENT MODE
 if app_mode == "Single Student":
@@ -772,27 +641,27 @@ if app_mode == "Single Student":
         with col1:
             subject = st.selectbox("Subject", ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"])
             year = st.selectbox("Year", [5, 7, 8, 10, 11])
-            name = st.text_input("Student Name", placeholder="First name only")
+            name = st.text_input("Student Name", placeholder="Enter first name only")
             gender = st.selectbox("Gender", ["Male", "Female"])
         
         with col2:
-            att = st.selectbox("Attitude", 
+            att = st.selectbox("Attitude Band", 
                              options=[90,85,80,75,70,65,60,55,40],
                              index=3)
             
-            achieve = st.selectbox("Achievement",
+            achieve = st.selectbox("Achievement Band",
                                  options=[90,85,80,75,70,65,60,55,40],
                                  index=3)
             
-            target = st.selectbox("Target",
+            target = st.selectbox("Target Band",
                                 options=[90,85,80,75,70,65,60,55,40],
                                 index=3)
         
-        attitude_target = st.text_area("Additional Comment (Optional)",
+        attitude_target = st.text_area("Optional Additional Comment",
                                      placeholder="Add any additional comments here...",
-                                     height=40)
+                                     height=60)
         
-        submitted = st.form_submit_button("Generate Comment", use_container_width=True)
+        submitted = st.form_submit_button("Generate Comment")
     
     if submitted and name:
         if not validate_upload_rate():
@@ -815,17 +684,17 @@ if app_mode == "Single Student":
         
         # Display comment
         st.subheader("Generated Comment")
-        st.text_area("", comment, height=150)
+        st.text_area("", comment, height=200)
         
         # Stats
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.metric("Characters", f"{char_count}/500")
+            st.metric("Character Count", f"{char_count}/500")
         with col2:
             st.metric("Words", len(comment.split()))
         with col3:
             if char_count < 450:
-                st.success("Good")
+                st.success("Good length")
             else:
                 st.warning("Near limit")
         
@@ -843,7 +712,7 @@ if app_mode == "Single Student":
         st.session_state.all_comments.append(student_entry)
         
         # Add another button
-        if st.button("Add Another Student", use_container_width=True):
+        if st.button("Add Another Student"):
             st.rerun()
 
 # BATCH UPLOAD MODE
@@ -851,22 +720,29 @@ elif app_mode == "Batch Upload":
     st.subheader("Batch Upload (CSV)")
     
     st.info("""
-    **CSV Format:**
-    Columns: Student Name, Gender, Subject, Year, Attitude, Achievement, Target
+    **CSV Format Required:**
+    - Columns: Student Name, Gender, Subject, Year, Attitude, Achievement, Target
+    - Gender: Male/Female
+    - Subject: English/Maths/Science/ESL (IGCSE)/Chemistry
+    - Year: 5,7,8,10,11
+    - Bands: 90,85,80,75,70,65,60,55,40
     """)
     
+    # Example CSV
     example_csv = """Student Name,Gender,Subject,Year,Attitude,Achievement,Target
 John,Male,English,7,75,80,85
-Sarah,Female,Maths,5,80,75,80"""
+Sarah,Female,Maths,5,80,75,80
+Ahmed,Male,ESL (IGCSE),10,85,90,85
+Maria,Female,Chemistry,11,80,85,80"""
     
     st.download_button(
-        label="Example CSV",
+        label="Download Example CSV",
         data=example_csv,
-        file_name="example.csv",
+        file_name="example_students.csv",
         mime="text/csv"
     )
     
-    uploaded_file = st.file_uploader("Upload CSV", type=['csv'])
+    uploaded_file = st.file_uploader("Choose CSV file", type=['csv'])
     
     if uploaded_file:
         if not validate_upload_rate():
@@ -877,13 +753,16 @@ Sarah,Female,Maths,5,80,75,80"""
             st.error(msg)
             st.stop()
         
-        with st.spinner("Processing..."):
+        with st.spinner("Processing CSV..."):
             df = process_csv_securely(uploaded_file)
         
         if df is not None:
             st.success(f"Processed {len(df)} students")
             
-            if st.button("Generate Comments", use_container_width=True):
+            with st.expander("Preview Data"):
+                st.dataframe(df.head())
+            
+            if st.button("Generate All Comments"):
                 if 'all_comments' not in st.session_state:
                     st.session_state.all_comments = []
                 
@@ -909,9 +788,113 @@ Sarah,Female,Maths,5,80,75,80"""
                             'subject': str(row.get('Subject', 'English')),
                             'year': int(row.get('Year', 7)),
                             'comment': comment,
-                            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M")
+                            'timestamp': datetime.now().strftime("%Y-%m-d %H:%M")
                         }
                         st.session_state.all_comments.append(student_entry)
                         
                     except Exception as e:
-                        st.error(f"Error row
+                        st.error(f"Error processing row {idx + 1}: {e}")
+                
+                progress_bar.empty()
+                st.success(f"Generated {len(df)} comments!")
+                st.session_state.last_upload_time = datetime.now()
+
+# PRIVACY INFO MODE
+elif app_mode == "Privacy Info":
+    st.subheader("Privacy & Security Information")
+    
+    st.markdown("""
+    ### Data Protection
+    
+    **How we handle data:**
+    - All processing occurs in your browser's memory
+    - No student data is sent to external servers
+    - Temporary files are created and immediately deleted
+    - No database or persistent storage is used
+    
+    **Security features:**
+    1. **Input Sanitization** - Removes special characters
+    2. **Rate Limiting** - Prevents system abuse
+    3. **File Validation** - Checks file size and type
+    4. **Auto-Cleanup** - Temporary files automatically deleted
+    5. **Memory Clearing** - All data erased on browser close
+    
+    **Best practices:**
+    - Use only first names or student IDs
+    - Close browser tab when finished
+    - Download reports immediately
+    - Use on school-managed devices for maximum privacy
+    """)
+
+# DOWNLOAD SECTION
+if 'all_comments' in st.session_state and st.session_state.all_comments:
+    st.markdown("---")
+    st.subheader("Download Reports")
+    
+    total_comments = len(st.session_state.all_comments)
+    st.info(f"You have {total_comments} generated comment(s)")
+    
+    # Preview
+    with st.expander(f"Preview Comments ({total_comments})"):
+        for idx, entry in enumerate(st.session_state.all_comments, 1):
+            st.markdown(f"**{idx}. {entry['name']}** ({entry['subject']} Year {entry['year']})")
+            st.write(entry['comment'])
+            st.markdown("---")
+    
+    # Download options
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        if st.button("Word Document"):
+            doc = Document()
+            doc.add_heading('Report Comments', 0)
+            doc.add_paragraph(f'Generated: {datetime.now().strftime("%Y-%m-%d %H:%M")}')
+            doc.add_paragraph(f'Total Students: {total_comments}')
+            doc.add_paragraph('')
+            
+            for entry in st.session_state.all_comments:
+                doc.add_heading(f"{entry['name']} - {entry['subject']} Year {entry['year']}", level=2)
+                doc.add_paragraph(entry['comment'])
+                doc.add_paragraph('')
+            
+            bio = io.BytesIO()
+            doc.save(bio)
+            
+            st.download_button(
+                label="Download Word File",
+                data=bio.getvalue(),
+                file_name=f"report_comments_{datetime.now().strftime('%Y%m%d_%H%M')}.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            )
+    
+    with col2:
+        if st.button("CSV Export"):
+            csv_data = []
+            for entry in st.session_state.all_comments:
+                csv_data.append({
+                    'Student Name': entry['name'],
+                    'Subject': entry['subject'],
+                    'Year': entry['year'],
+                    'Comment': entry['comment'],
+                    'Generated': entry['timestamp']
+                })
+            
+            df_export = pd.DataFrame(csv_data)
+            csv_bytes = df_export.to_csv(index=False).encode('utf-8')
+            
+            st.download_button(
+                label="Download CSV",
+                data=csv_bytes,
+                file_name=f"report_comments_{datetime.now().strftime('%Y%m%d_%H%M')}.csv",
+                mime="text/csv"
+            )
+    
+    with col3:
+        if st.button("Clear All", type="secondary"):
+            st.session_state.all_comments = []
+            st.success("All comments cleared!")
+            st.rerun()
+
+# FOOTER
+st.markdown("---")
+st.caption("CommentCraft v4.0 • Secure & Private")
