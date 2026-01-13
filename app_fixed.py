@@ -20,6 +20,109 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
 
+# Custom CSS to reduce space and remove colors
+st.markdown("""
+<style>
+    /* Reduce space on top of the title */
+    .stApp > header {
+        padding-top: 1rem !important;
+    }
+    
+    /* Reduce space between navigation bar and title */
+    .block-container {
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+    }
+    
+    /* Center the title */
+    h1 {
+        text-align: center !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Remove all colored borders, shadows, boxes */
+    .stAlert, .stWarning, .stSuccess, .stInfo, .stError {
+        border: none !important;
+        box-shadow: none !important;
+        background-color: #ffffff !important;
+    }
+    
+    /* Remove colored borders from buttons and inputs */
+    .stButton > button, .stDownloadButton > button, .stFileUploader > div {
+        border: 1px solid #cccccc !important;
+        box-shadow: none !important;
+    }
+    
+    /* Remove colored borders from radio buttons */
+    .stRadio > div {
+        border: none !important;
+    }
+    
+    /* Remove colored highlights */
+    .st-bb, .st-at, .st-af {
+        border-color: #cccccc !important;
+    }
+    
+    /* Style the "Add Another" button with purple background */
+    div[data-testid="stButton"] button:has-text("Add Another Student") {
+        background-color: #8A2BE2 !important;
+        color: white !important;
+        border: none !important;
+    }
+    
+    /* Style CSV download button with purple */
+    div[data-testid="stButton"] button:has-text("Download Example CSV"),
+    div[data-testid="stDownloadButton"] button:has-text("Download CSV") {
+        background-color: #8A2BE2 !important;
+        color: white !important;
+        border: none !important;
+    }
+    
+    /* Style the box next to CSV */
+    .stDownloadButton > button {
+        background-color: #8A2BE2 !important;
+        color: white !important;
+        border: none !important;
+    }
+    
+    /* Purple title */
+    h1 {
+        color: #8A2BE2 !important;
+    }
+    
+    /* Make all backgrounds white */
+    .main, .stApp {
+        background-color: white !important;
+    }
+    
+    /* Remove any gradient backgrounds */
+    div[data-testid="stSidebar"],
+    .css-1d391kg,
+    .css-1lcbmhc {
+        background-color: white !important;
+    }
+    
+    /* Remove sidebar colors */
+    .css-1lcbmhc {
+        border-right: 1px solid #f0f0f0 !important;
+    }
+    
+    /* Remove colored text in metrics */
+    [data-testid="stMetricValue"], [data-testid="stMetricLabel"] {
+        color: #333333 !important;
+    }
+    
+    /* Remove progress bar colors */
+    .stProgress > div > div {
+        background-color: #f0f0f0 !important;
+    }
+    
+    .stProgress > div > div > div {
+        background-color: #8A2BE2 !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # SECURITY & PRIVACY SETTINGS
 TARGET_CHARS = 500
 MAX_FILE_SIZE_MB = 5
@@ -622,10 +725,10 @@ with st.sidebar:
         st.success("All data cleared!")
         st.rerun()
 
-# Main content area
-st.title("CommentCraft")
+# Main content area - CENTERED TITLE
+st.markdown("<h1>CommentCraft</h1>", unsafe_allow_html=True)
 
-# Privacy notice
+# Privacy notice - removed colors
 st.warning("""
 **Privacy Notice:** All data is processed in memory only. No files are stored on servers. 
 Close browser tab to completely erase all data. For use with anonymized student data only.
@@ -711,7 +814,7 @@ if app_mode == "Single Student":
         }
         st.session_state.all_comments.append(student_entry)
         
-        # Add another button
+        # Add another button - PURPLE BACKGROUND
         if st.button("Add Another Student"):
             st.rerun()
 
@@ -735,6 +838,7 @@ Sarah,Female,Maths,5,80,75,80
 Ahmed,Male,ESL (IGCSE),10,85,90,85
 Maria,Female,Chemistry,11,80,85,80"""
     
+    # CSV download button with purple background
     st.download_button(
         label="Download Example CSV",
         data=example_csv,
@@ -827,74 +931,4 @@ elif app_mode == "Privacy Info":
     """)
 
 # DOWNLOAD SECTION
-if 'all_comments' in st.session_state and st.session_state.all_comments:
-    st.markdown("---")
-    st.subheader("Download Reports")
-    
-    total_comments = len(st.session_state.all_comments)
-    st.info(f"You have {total_comments} generated comment(s)")
-    
-    # Preview
-    with st.expander(f"Preview Comments ({total_comments})"):
-        for idx, entry in enumerate(st.session_state.all_comments, 1):
-            st.markdown(f"**{idx}. {entry['name']}** ({entry['subject']} Year {entry['year']})")
-            st.write(entry['comment'])
-            st.markdown("---")
-    
-    # Download options
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        if st.button("Word Document"):
-            doc = Document()
-            doc.add_heading('Report Comments', 0)
-            doc.add_paragraph(f'Generated: {datetime.now().strftime("%Y-%m-%d %H:%M")}')
-            doc.add_paragraph(f'Total Students: {total_comments}')
-            doc.add_paragraph('')
-            
-            for entry in st.session_state.all_comments:
-                doc.add_heading(f"{entry['name']} - {entry['subject']} Year {entry['year']}", level=2)
-                doc.add_paragraph(entry['comment'])
-                doc.add_paragraph('')
-            
-            bio = io.BytesIO()
-            doc.save(bio)
-            
-            st.download_button(
-                label="Download Word File",
-                data=bio.getvalue(),
-                file_name=f"report_comments_{datetime.now().strftime('%Y%m%d_%H%M')}.docx",
-                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            )
-    
-    with col2:
-        if st.button("CSV Export"):
-            csv_data = []
-            for entry in st.session_state.all_comments:
-                csv_data.append({
-                    'Student Name': entry['name'],
-                    'Subject': entry['subject'],
-                    'Year': entry['year'],
-                    'Comment': entry['comment'],
-                    'Generated': entry['timestamp']
-                })
-            
-            df_export = pd.DataFrame(csv_data)
-            csv_bytes = df_export.to_csv(index=False).encode('utf-8')
-            
-            st.download_button(
-                label="Download CSV",
-                data=csv_bytes,
-                file_name=f"report_comments_{datetime.now().strftime('%Y%m%d_%H%M')}.csv",
-                mime="text/csv"
-            )
-    
-    with col3:
-        if st.button("Clear All", type="secondary"):
-            st.session_state.all_comments = []
-            st.success("All comments cleared!")
-            st.rerun()
-
-# FOOTER
-st.markdown("---")
-st.caption("CommentCraft v4.0 • Secure & Private")
+if 'all_comments' in st.session_state
