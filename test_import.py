@@ -1,19 +1,16 @@
-import streamlit as st
+Import Test
+SUCCESS! Imported maths_bank
 
-st.title("Import Test")
+Sample value: calculated with precision, applied mental strategies fluently, and explored number patterns confidently
 
-try:
-    from statements_year5_Maths import maths_bank
-    st.success("SUCCESS! Imported maths_bank")
-    st.write("Sample value:", maths_bank.get(90, "Not found"))
-except ImportError as e:
-    st.error(f"Failed to import maths_bank: {e}")
+Good - number_bank doesn't exist (as expected)
 
-try:
-    from statements_year5_Maths import number_bank
-    st.warning("PROBLEM! Found old number_bank variable")
-except ImportError:
-    st.success("Good - number_bank doesn't exist (as expected)")
+All variables in file:
 
-import statements_year5_Maths
-st.write("All variables in file:", [x for x in dir(statements_year5_Maths) if not x.startswith('_')])
+[
+0:"attitude_bank"
+1:"closer_bank"
+2:"maths_bank"
+3:"opening_phrases"
+4:"target_bank"
+]
