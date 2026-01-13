@@ -1,8 +1,5 @@
-# =========================================
 # MULTI-SUBJECT REPORT COMMENT GENERATOR
 # Supports: English, Science, ESL (IGCSE), Chemistry
-# Clean Design - No Icons
-# =========================================
 
 import streamlit as st
 import tempfile
@@ -14,20 +11,20 @@ import re
 from datetime import datetime, timedelta
 from docx import Document
 
-# ========== SECURITY & PRIVACY SETTINGS ==========
+# SECURITY & PRIVACY SETTINGS
 TARGET_CHARS = 500
 MAX_FILE_SIZE_MB = 5
 MAX_ROWS_PER_UPLOAD = 100
 RATE_LIMIT_SECONDS = 10
 
-# ========== PAGE CONFIGURATION ==========
+# PAGE CONFIGURATION
 st.set_page_config(
     page_title="Report Comment Generator",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# ========== SECURITY INITIALIZATION ==========
+# SECURITY INITIALIZATION
 if 'app_initialized' not in st.session_state:
     st.session_state.clear()
     st.session_state.app_initialized = True
@@ -35,7 +32,7 @@ if 'app_initialized' not in st.session_state:
     st.session_state.last_upload_time = datetime.now()
     st.session_state.generated_files = []
 
-# ========== IMPORT STATEMENT BANKS ==========
+# IMPORT STATEMENT BANKS
 try:
     # English Year 7
     from statement_banks.english_year7 import (
@@ -115,7 +112,7 @@ except ImportError as e:
     st.error("Please ensure all statement bank files are in the 'statement_banks' folder.")
     st.stop()
 
-# ========== SECURITY FUNCTIONS ==========
+# SECURITY FUNCTIONS
 def validate_upload_rate():
     """Prevent rapid-fire uploads/abuse"""
     time_since_last = datetime.now() - st.session_state.last_upload_time
@@ -170,7 +167,7 @@ def process_csv_securely(uploaded_file):
         except:
             pass
 
-# ========== HELPER FUNCTIONS ==========
+# HELPER FUNCTIONS
 def get_pronouns(gender):
     gender = gender.lower()
     if gender == "male":
@@ -421,7 +418,7 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
     
     return comment
 
-# ========== STREAMLIT APP LAYOUT ==========
+# STREAMLIT APP LAYOUT
 
 # Sidebar for navigation
 with st.sidebar:
@@ -460,7 +457,7 @@ st.warning("""
 Close browser tab to completely erase all data. For use with anonymized student data only.
 """)
 
-# ========== SINGLE STUDENT MODE ==========
+# SINGLE STUDENT MODE
 if app_mode == "Single Student":
     st.subheader("Single Student Entry")
     
@@ -544,7 +541,7 @@ if app_mode == "Single Student":
         if st.button("Add Another Student"):
             st.rerun()
 
-# ========== BATCH UPLOAD MODE ==========
+# BATCH UPLOAD MODE
 elif app_mode == "Batch Upload":
     st.subheader("Batch Upload (CSV)")
     
@@ -628,7 +625,7 @@ Maria,Female,Chemistry,11,80,85,80"""
                 st.success(f"Generated {len(df)} comments!")
                 st.session_state.last_upload_time = datetime.now()
 
-# ========== PRIVACY INFO MODE ==========
+# PRIVACY INFO MODE
 elif app_mode == "Privacy Info":
     st.subheader("Privacy & Security Information")
     
@@ -655,7 +652,7 @@ elif app_mode == "Privacy Info":
     - Use on school-managed devices for maximum privacy
     """)
 
-# ========== DOWNLOAD SECTION ==========
+# DOWNLOAD SECTION
 if 'all_comments' in st.session_state and st.session_state.all_comments:
     st.markdown("---")
     st.subheader("Download Reports")
@@ -724,6 +721,6 @@ if 'all_comments' in st.session_state and st.session_state.all_comments:
             st.success("All comments cleared!")
             st.rerun()
 
-# ========== FOOTER ==========
+# FOOTER
 st.markdown("---")
 st.caption("Report Generator v3.0 • Multi-Subject Edition")
