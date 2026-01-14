@@ -270,6 +270,10 @@ def fix_pronouns_in_text(text, pronoun, possessive):
 
 def generate_comment(subject, year, name, gender, att, achieve, target, optional_text=None):
     """Generate a report comment based on subject, year, and performance bands"""
+    # Save the subject and year for next time
+    st.session_state.last_subject = subject
+    st.session_state.last_year = year
+    
     p, p_poss = get_pronouns(gender)
     name = sanitize_input(name)
     
@@ -661,21 +665,8 @@ if app_mode == "Single Student":
         col1, col2 = st.columns(2)
         
         with col1:
-            # Get subject index
-            subjects = ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"]
-            subject_index = 0
-            if st.session_state.last_subject in subjects:
-                subject_index = subjects.index(st.session_state.last_subject)
-            
-            subject = st.selectbox("Subject", subjects, index=subject_index)
-            
-            # Get year index
-            years = [5, 7, 8, 10, 11]
-            year_index = 1  # Default to 7
-            if st.session_state.last_year in years:
-                year_index = years.index(st.session_state.last_year)
-            
-            year = st.selectbox("Year", years, index=year_index)
+            subject = st.selectbox("Subject", ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"])
+            year = st.selectbox("Year", [5, 7, 8, 10, 11])
             name = st.text_input("Student Name", placeholder="Enter first name only")
             gender = st.selectbox("Gender", ["Male", "Female"])
         
