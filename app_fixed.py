@@ -905,7 +905,7 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
     
     # ADD OPTIONAL TEXT AT THE VERY END (AFTER EVERYTHING ELSE)
     if optional_text:
-        optional_text = sanitize_input(optional_text)
+        optional_text = sanitize_input(optional_text, max_length=200)
         if optional_text:
             # Ensure optional text starts with capital letter and ends with period
             if not optional_text[0].isupper():
@@ -913,14 +913,12 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             if not optional_text.endswith('.'):
                 optional_text += '.'
             
-            # Add to the end of the comment with proper punctuation
+            # Add to the end of the comment - simply append with space
             if comment.strip().endswith('.'):
-                comment = comment.rstrip()
-                comment = comment[:-1]  # Remove the last period
-                comment += f". Additionally, {lowercase_first(optional_text)}"
+                comment = comment.rstrip() + ' ' + optional_text
             else:
-                comment += f". Additionally, {lowercase_first(optional_text)}"
-    
+                comment = comment.rstrip() + '. ' + optional_text
+                
     # Truncate after adding optional text
     comment = truncate_comment(comment, TARGET_CHARS)
     
