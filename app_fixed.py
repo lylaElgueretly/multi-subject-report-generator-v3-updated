@@ -1,4 +1,4 @@
-# Version 2.1 - Remember last subject/year
+# Version 2.0 - Cache buster
 # MULTI-SUBJECT REPORT COMMENT GENERATOR
 # Supports: English, Science, Maths, ESL, Chemistry
 
@@ -16,6 +16,8 @@ import sys
 sys.dont_write_bytecode = True
 
 # Add this at the VERY TOP for import fixes
+import os
+import sys
 sys.path.insert(0, os.path.abspath('.'))
 
 # SECURITY & PRIVACY SETTINGS
@@ -40,7 +42,6 @@ if 'app_initialized' not in st.session_state:
     st.session_state.generated_files = []
     st.session_state.last_subject = "English"
     st.session_state.last_year = 7
-    st.session_state.all_comments = []
 
 # IMPORT STATEMENT FILES (directly from repository)
 try:
@@ -156,6 +157,7 @@ except ImportError as e:
 
 # SECURITY FUNCTIONS
 def validate_upload_rate():
+    """Prevent rapid-fire uploads/abuse"""
     time_since_last = datetime.now() - st.session_state.last_upload_time
     if time_since_last < timedelta(seconds=RATE_LIMIT_SECONDS):
         wait_time = RATE_LIMIT_SECONDS - time_since_last.seconds
@@ -164,12 +166,14 @@ def validate_upload_rate():
     return True
 
 def sanitize_input(text, max_length=100):
+    """Sanitize user input to prevent injection attacks"""
     if not text:
         return ""
     sanitized = ''.join(c for c in text if c.isalnum() or c in " .'-")
     return sanitized[:max_length].strip().title()
 
 def validate_file(file):
+    """Validate uploaded file size and type"""
     if file.size > MAX_FILE_SIZE_MB * 1024 * 1024:
         return False, f"File too large (max {MAX_FILE_SIZE_MB}MB)"
     
@@ -179,6 +183,7 @@ def validate_file(file):
     return True, ""
 
 def process_csv_securely(uploaded_file):
+    """Process CSV with auto-cleanup of temp files"""
     with tempfile.NamedTemporaryFile(delete=False, suffix='.csv', mode='wb') as tmp:
         tmp.write(uploaded_file.getvalue())
         temp_path = tmp.name
@@ -205,126 +210,6 @@ def process_csv_securely(uploaded_file):
         except:
             pass
 
-# -------------------------
-# COMMENT GENERATION FUNCTION
-# -------------------------
-def generate_comment(subject, year, name, gender, att, achieve, target, optional_text=None):
-    """
-    Generate a report comment based on subject, year, student info, and performance bands.
-    """
-    pronoun, possessive = get_pronouns(gender)
-
-    # Pick statement banks based on subject & year
-    if subject == "English":
-        if year == 5:
-            opening = random.choice(opening_5_eng)
-            attitude = attitude_5_eng.get(att, "")
-            reading = random.choice(reading_5_eng)
-            writing = random.choice(writing_5_eng)
-            closer = random.choice(closer_5_eng)
-            targets = f"Target: {random.choice(target_5_eng)}"
-        elif year == 7:
-            opening = random.choice(opening_7_eng)
-            attitude = attitude_7_eng.get(att, "")
-            reading = random.choice(reading_7_eng)
-            writing = random.choice(writing_7_eng)
-            closer = random.choice(closer_7_eng)
-            targets = f"Target: {random.choice(target_7_eng)}"
-        elif year == 8:
-            opening = random.choice(opening_8_eng)
-            attitude = attitude_8_eng.get(att, "")
-            reading = random.choice(reading_8_eng)
-            writing = random.choice(writing_8_eng)
-            closer = random.choice(closer_8_eng)
-            targets = f"Target: {random.choice(target_8_eng)}"
-        else:
-            return "English statements for this year not available."
-
-        comment = f"{opening} {attitude} {reading} {writing} {targets} {closer}"
-    
-    elif subject == "Maths":
-        if year == 5:
-            opening = random.choice(opening_5_math)
-            attitude = attitude_5_math.get(att, "")
-            maths = random.choice(maths_5_math)
-            targets = f"Target: {random.choice(target_5_math)}"
-            closer = random.choice(closer_5_math)
-        elif year == 7:
-            opening = random.choice(opening_7_math)
-            attitude = attitude_7_math.get(att, "")
-            maths = random.choice(maths_7_math)
-            targets = f"Target: {random.choice(target_7_math)}"
-            closer = random.choice(closer_7_math)
-        elif year == 8:
-            opening = random.choice(opening_8_math)
-            attitude = attitude_8_math.get(att, "")
-            maths = random.choice(maths_8_math)
-            targets = f"Target: {random.choice(target_8_math)}"
-            closer = random.choice(closer_8_math)
-        else:
-            return "Maths statements for this year not available."
-
-        comment = f"{opening} {attitude} {maths} {targets} {closer}"
-
-    elif subject == "Science":
-        if year == 5:
-            opening = random.choice(opening_5_sci)
-            attitude = attitude_5_sci.get(att, "")
-            science = random.choice(science_5_sci)
-            targets = f"Target: {random.choice(target_5_sci)}"
-            closer = random.choice(closer_5_sci)
-        elif year == 7:
-            opening = random.choice(opening_7_sci)
-            attitude = attitude_7_sci.get(att, "")
-            science = random.choice(science_7_sci)
-            targets = f"Target: {random.choice(target_7_sci)}"
-            closer = random.choice(closer_7_sci)
-        elif year == 8:
-            opening = random.choice(opening_8_sci)
-            attitude = attitude_8_sci.get(att, "")
-            science = random.choice(science_8_sci)
-            targets = f"Target: {random.choice(target_8_sci)}"
-            closer = random.choice(closer_8_sci)
-        else:
-            return "Science statements for this year not available."
-
-        comment = f"{opening} {attitude} {science} {targets} {closer}"
-
-    elif subject == "ESL (IGCSE)":
-        opening = random.choice(opening_esl)
-        attitude_stmt = attitude_esl.get(att, "")
-        reading_stmt = random.choice(reading_esl)
-        writing_stmt = random.choice(writing_esl)
-        speaking_stmt = random.choice(speaking_esl)
-        listening_stmt = random.choice(listening_esl)
-        targets = f"Targets: {random.choice(target_reading_esl)}, {random.choice(target_write_esl)}, {random.choice(target_speak_esl)}, {random.choice(target_listen_esl)}"
-        closer = random.choice(closer_esl)
-        comment = f"{opening} {attitude_stmt} {reading_stmt} {writing_stmt} {speaking_stmt} {listening_stmt} {targets} {closer}"
-
-    elif subject == "Chemistry":
-        opening = random.choice(opening_chem)
-        attitude_stmt = attitude_chem.get(att, "")
-        chemistry_stmt = random.choice(chemistry_chem)
-        targets = f"Target: {random.choice(target_chem)}"
-        closer = random.choice(closer_chem)
-        comment = f"{opening} {attitude_stmt} {chemistry_stmt} {targets} {closer}"
-
-    else:
-        return "Subject not supported."
-
-    # Add optional text
-    if optional_text:
-        comment += " " + optional_text.strip()
-
-    # Fix pronouns
-    comment = fix_pronouns_in_text(comment, pronoun, possessive)
-
-    # Fix capitalization and truncate
-    comment = fix_sentence_capitalization(comment)
-    comment = truncate_comment(comment, TARGET_CHARS)
-
-    return comment
-
 # HELPER FUNCTIONS
 def get_pronouns(gender):
     gender = gender.lower()
@@ -346,8 +231,10 @@ def truncate_comment(comment, target=TARGET_CHARS):
     return truncated
 
 def fix_sentence_capitalization(text):
+    """Fix lowercase letters after periods."""
     if not text:
         return text
+    # Simple fix: capitalize after periods
     result = ""
     capitalize_next = True
     for char in text:
@@ -361,8 +248,11 @@ def fix_sentence_capitalization(text):
     return result
 
 def fix_pronouns_in_text(text, pronoun, possessive):
+    """Fix gender pronouns in statement text"""
     if not text:
         return text
+    
+    # Fix pronouns with word boundaries
     text = re.sub(r'\bhe\b', pronoun, text, flags=re.IGNORECASE)
     text = re.sub(r'\bHe\b', pronoun.capitalize(), text)
     text = re.sub(r'\bshe\b', pronoun, text, flags=re.IGNORECASE)
@@ -375,16 +265,368 @@ def fix_pronouns_in_text(text, pronoun, possessive):
     text = re.sub(r'\bHim\b', pronoun.capitalize(), text)
     text = re.sub(r'\bhimself\b', f"{pronoun}self", text, flags=re.IGNORECASE)
     text = re.sub(r'\bherself\b', f"{pronoun}self", text, flags=re.IGNORECASE)
+    
     return text
 
-# -------------------------
+def generate_comment(subject, year, name, gender, att, achieve, target, optional_text=None):
+    """Generate a report comment based on subject, year, and performance bands"""
+    # Save the subject and year for next time
+    st.session_state.last_subject = subject
+    st.session_state.last_year = year
+    
+    p, p_poss = get_pronouns(gender)
+    name = sanitize_input(name)
+    
+    # Initialize comment parts
+    comment_parts = []
+    
+    # Subject-specific comment generation
+    if subject == "English":
+        if year == 5:
+            opening = random.choice(opening_5_eng)
+            attitude_text = fix_pronouns_in_text(attitude_5_eng[att], p, p_poss)
+            attitude_sentence = f"{opening} {name} {attitude_text}"
+            
+            reading_text = fix_pronouns_in_text(reading_5_eng[achieve], p, p_poss)
+            if reading_text[0].islower():
+                reading_text = f"{p} {reading_text}"
+            reading_sentence = f"In reading, {reading_text}"
+            
+            writing_text = fix_pronouns_in_text(writing_5_eng[achieve], p, p_poss)
+            if writing_text[0].islower():
+                writing_text = f"{p} {writing_text}"
+            writing_sentence = f"In writing, {writing_text}"
+            
+            reading_target_text = fix_pronouns_in_text(target_5_eng[target], p, p_poss)
+            reading_target_sentence = f"For the next term, {p} should {lowercase_first(reading_target_text)}"
+            
+            writing_target_text = fix_pronouns_in_text(target_write_5_eng[target], p, p_poss)
+            writing_target_sentence = f"Additionally, {p} should {lowercase_first(writing_target_text)}"
+            
+            closer_sentence = random.choice(closer_5_eng)
+            
+            comment_parts = [
+                attitude_sentence,
+                reading_sentence,
+                writing_sentence,
+                reading_target_sentence,
+                writing_target_sentence,
+                closer_sentence
+            ]
+            
+        elif year == 7:
+            opening = random.choice(opening_7_eng)
+            attitude_text = fix_pronouns_in_text(attitude_7_eng[att], p, p_poss)
+            attitude_sentence = f"{opening} {name} {attitude_text}"
+            
+            reading_text = fix_pronouns_in_text(reading_7_eng[achieve], p, p_poss)
+            if reading_text[0].islower():
+                reading_text = f"{p} {reading_text}"
+            reading_sentence = f"In reading, {reading_text}"
+            
+            writing_text = fix_pronouns_in_text(writing_7_eng[achieve], p, p_poss)
+            if writing_text[0].islower():
+                writing_text = f"{p} {writing_text}"
+            writing_sentence = f"In writing, {writing_text}"
+            
+            reading_target_text = fix_pronouns_in_text(target_7_eng[target], p, p_poss)
+            reading_target_sentence = f"For the next term, {p} should {lowercase_first(reading_target_text)}"
+            
+            writing_target_text = fix_pronouns_in_text(target_write_7_eng[target], p, p_poss)
+            writing_target_sentence = f"Additionally, {p} should {lowercase_first(writing_target_text)}"
+            
+            closer_sentence = random.choice(closer_7_eng)
+            
+            comment_parts = [
+                attitude_sentence,
+                reading_sentence,
+                writing_sentence,
+                reading_target_sentence,
+                writing_target_sentence,
+                closer_sentence
+            ]
+            
+        else:  # Year 8
+            opening = random.choice(opening_8_eng)
+            attitude_text = fix_pronouns_in_text(attitude_8_eng[att], p, p_poss)
+            attitude_sentence = f"{opening} {name} {attitude_text}"
+            
+            reading_text = fix_pronouns_in_text(reading_8_eng[achieve], p, p_poss)
+            if reading_text[0].islower():
+                reading_text = f"{p} {reading_text}"
+            reading_sentence = f"In reading, {reading_text}"
+            
+            writing_text = fix_pronouns_in_text(writing_8_eng[achieve], p, p_poss)
+            if writing_text[0].islower():
+                writing_text = f"{p} {writing_text}"
+            writing_sentence = f"In writing, {writing_text}"
+            
+            reading_target_text = fix_pronouns_in_text(target_8_eng[target], p, p_poss)
+            reading_target_sentence = f"For the next term, {p} should {lowercase_first(reading_target_text)}"
+            
+            writing_target_text = fix_pronouns_in_text(target_write_8_eng[target], p, p_poss)
+            writing_target_sentence = f"Additionally, {p} should {lowercase_first(writing_target_text)}"
+            
+            closer_sentence = random.choice(closer_8_eng)
+            
+            comment_parts = [
+                attitude_sentence,
+                reading_sentence,
+                writing_sentence,
+                reading_target_sentence,
+                writing_target_sentence,
+                closer_sentence
+            ]
+        
+    elif subject == "Science":
+        if year == 5:
+            opening = random.choice(opening_5_sci)
+            attitude_text = fix_pronouns_in_text(attitude_5_sci[att], p, p_poss)
+            attitude_sentence = f"{opening} {name} {attitude_text}"
+            
+            science_text = fix_pronouns_in_text(science_5_sci[achieve], p, p_poss)
+            if science_text[0].islower():
+                science_text = f"{p} {science_text}"
+            science_sentence = science_text
+            
+            target_text = fix_pronouns_in_text(target_5_sci[target], p, p_poss)
+            target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
+            
+            closer_sentence = random.choice(closer_5_sci)
+            
+            comment_parts = [
+                attitude_sentence,
+                science_sentence,
+                target_sentence,
+                closer_sentence
+            ]
+            
+        elif year == 7:
+            opening = random.choice(opening_7_sci)
+            attitude_text = fix_pronouns_in_text(attitude_7_sci[att], p, p_poss)
+            attitude_sentence = f"{opening} {name} {attitude_text}"
+            
+            science_text = fix_pronouns_in_text(science_7_sci[achieve], p, p_poss)
+            if science_text[0].islower():
+                science_text = f"{p} {science_text}"
+            science_sentence = science_text
+            
+            target_text = fix_pronouns_in_text(target_7_sci[target], p, p_poss)
+            target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
+            
+            closer_sentence = random.choice(closer_7_sci)
+            
+            comment_parts = [
+                attitude_sentence,
+                science_sentence,
+                target_sentence,
+                closer_sentence
+            ]
+            
+        else:  # Year 8
+            opening = random.choice(opening_8_sci)
+            attitude_text = fix_pronouns_in_text(attitude_8_sci[att], p, p_poss)
+            attitude_sentence = f"{opening} {name} {attitude_text}"
+            
+            science_text = fix_pronouns_in_text(science_8_sci[achieve], p, p_poss)
+            if science_text[0].islower():
+                science_text = f"{p} {science_text}"
+            science_sentence = science_text
+            
+            target_text = fix_pronouns_in_text(target_8_sci[target], p, p_poss)
+            target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
+            
+            closer_sentence = random.choice(closer_8_sci)
+            
+            comment_parts = [
+                attitude_sentence,
+                science_sentence,
+                target_sentence,
+                closer_sentence
+            ]
+        
+    elif subject == "Maths":
+        if year == 5:
+            opening = random.choice(opening_5_math)
+            attitude_text = fix_pronouns_in_text(attitude_5_math[att], p, p_poss)
+            attitude_sentence = f"{opening} {name} {attitude_text}"
+            
+            maths_text = fix_pronouns_in_text(maths_5_math[achieve], p, p_poss)
+            if maths_text[0].islower():
+                maths_text = f"{p} {maths_text}"
+            maths_sentence = maths_text
+            
+            target_text = fix_pronouns_in_text(target_5_math[target], p, p_poss)
+            target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
+            
+            closer_sentence = random.choice(closer_5_math)
+            
+            comment_parts = [
+                attitude_sentence,
+                maths_sentence,
+                target_sentence,
+                closer_sentence
+            ]
+            
+        elif year == 7:
+            opening = random.choice(opening_7_math)
+            attitude_text = fix_pronouns_in_text(attitude_7_math[att], p, p_poss)
+            attitude_sentence = f"{opening} {name} {attitude_text}"
+            
+            maths_text = fix_pronouns_in_text(maths_7_math[achieve], p, p_poss)
+            if maths_text[0].islower():
+                maths_text = f"{p} {maths_text}"
+            maths_sentence = maths_text
+            
+            target_text = fix_pronouns_in_text(target_7_math[target], p, p_poss)
+            target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
+            
+            closer_sentence = random.choice(closer_7_math)
+            
+            comment_parts = [
+                attitude_sentence,
+                maths_sentence,
+                target_sentence,
+                closer_sentence
+            ]
+            
+        else:  # Year 8
+            opening = random.choice(opening_8_math)
+            attitude_text = fix_pronouns_in_text(attitude_8_math[att], p, p_poss)
+            attitude_sentence = f"{opening} {name} {attitude_text}"
+            
+            maths_text = fix_pronouns_in_text(maths_8_math[achieve], p, p_poss)
+            if maths_text[0].islower():
+                maths_text = f"{p} {maths_text}"
+            maths_sentence = maths_text
+            
+            target_text = fix_pronouns_in_text(target_8_math[target], p, p_poss)
+            target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
+            
+            closer_sentence = random.choice(closer_8_math)
+            
+            comment_parts = [
+                attitude_sentence,
+                maths_sentence,
+                target_sentence,
+                closer_sentence
+            ]
+        
+    elif subject == "ESL (IGCSE)":
+        opening = random.choice(opening_esl)
+        attitude_text = fix_pronouns_in_text(attitude_esl[att], p, p_poss)
+        attitude_sentence = f"{opening} {name} {attitude_text}"
+        
+        # Reading
+        reading_text = fix_pronouns_in_text(reading_esl[achieve], p, p_poss)
+        if reading_text[0].islower():
+            reading_text = f"{p} {reading_text}"
+        reading_sentence = f"In reading, {reading_text}"
+        
+        # Writing
+        writing_text = fix_pronouns_in_text(writing_esl[achieve], p, p_poss)
+        if writing_text[0].islower():
+            writing_text = f"{p} {writing_text}"
+        writing_sentence = f"In writing, {writing_text}"
+        
+        # Speaking
+        speaking_text = fix_pronouns_in_text(speaking_esl[achieve], p, p_poss)
+        if speaking_text[0].islower():
+            speaking_text = f"{p} {speaking_text}"
+        speaking_sentence = f"In speaking, {speaking_text}"
+        
+        # Listening
+        listening_text = fix_pronouns_in_text(listening_esl[achieve], p, p_poss)
+        if listening_text[0].islower():
+            listening_text = f"{p} {listening_text}"
+        listening_sentence = f"In listening, {listening_text}"
+        
+        # Targets
+        reading_target_text = fix_pronouns_in_text(target_reading_esl[target], p, p_poss)
+        reading_target_sentence = f"For the next term, {p} should {lowercase_first(reading_target_text)}"
+        
+        writing_target_text = fix_pronouns_in_text(target_write_esl[target], p, p_poss)
+        writing_target_sentence = f"Additionally, {p} should {lowercase_first(writing_target_text)}"
+        
+        closer_sentence = random.choice(closer_esl)
+        
+        comment_parts = [
+            attitude_sentence,
+            reading_sentence,
+            writing_sentence,
+            speaking_sentence,
+            listening_sentence,
+            reading_target_sentence,
+            writing_target_sentence,
+            closer_sentence
+        ]
+        
+    elif subject == "Chemistry":
+        opening = random.choice(opening_chem)
+        attitude_text = fix_pronouns_in_text(attitude_chem[att], p, p_poss)
+        attitude_sentence = f"{opening} {name} {attitude_text}"
+        
+        chemistry_text = fix_pronouns_in_text(chemistry_chem[achieve], p, p_poss)
+        if chemistry_text[0].islower():
+            chemistry_text = f"{p} {chemistry_text}"
+        chemistry_sentence = chemistry_text
+        
+        target_text = fix_pronouns_in_text(target_chem[target], p, p_poss)
+        target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
+        
+        closer_sentence = random.choice(closer_chem)
+        
+        comment_parts = [
+            attitude_sentence,
+            chemistry_sentence,
+            target_sentence,
+            closer_sentence
+        ]
+    
+    else:
+        # Default fallback if subject not recognized
+        comment_parts = [f"{name} has worked in {subject} this term."]
+    
+    # Add optional text if provided - NOW AT THE END
+    if optional_text:
+        optional_text = sanitize_input(optional_text)
+        if optional_text:
+            optional_sentence = f"Additionally, {lowercase_first(optional_text)}"
+            if not optional_sentence.endswith('.'):
+                optional_sentence += '.'
+            # Insert before the closer sentence (second to last position)
+            if comment_parts:
+                comment_parts.insert(-1, optional_sentence)
+            else:
+                comment_parts.append(optional_sentence)
+    
+    # Ensure all sentences end with period
+    for i in range(len(comment_parts)):
+        if not comment_parts[i].endswith('.'):
+            comment_parts[i] += '.'
+    
+    # Join comment parts
+    comment = " ".join([c for c in comment_parts if c])
+    
+    # FIX: Apply sentence capitalization
+    comment = fix_sentence_capitalization(comment)
+    
+    # Truncate to target length
+    comment = truncate_comment(comment, TARGET_CHARS)
+    
+    return comment
+
 # STREAMLIT APP LAYOUT
-# -------------------------
+
+# Sidebar for navigation
 with st.sidebar:
     st.title("CommentCraft")
     st.caption("Your AI report writing assistant")
     
-    app_mode = st.radio("Choose Mode", ["Single Student", "Batch Upload", "Privacy Info"])
+    app_mode = st.radio(
+        "Choose Mode",
+        ["Single Student", "Batch Upload", "Privacy Info"]
+    )
     
     st.markdown("---")
     st.markdown("### Privacy Features")
@@ -403,102 +645,66 @@ with st.sidebar:
         st.session_state.last_upload_time = datetime.now()
         st.session_state.last_subject = "English"
         st.session_state.last_year = 7
-        st.session_state.all_comments = []
         st.success("All data cleared!")
         st.rerun()
 
+# Main content area
 st.title("CommentCraft")
+
+# Privacy notice
+st.warning("""
+**Privacy Notice:** All data is processed in memory only. No files are stored on servers. 
+Close browser tab to completely erase all data. For use with anonymized student data only.
+""")
 
 # SINGLE STUDENT MODE
 if app_mode == "Single Student":
     st.subheader("Single Student Entry")
-
-    # Ensure last_subject and last_year exist
-    if 'last_subject' not in st.session_state:
-        st.session_state.last_subject = "English"
-    if 'last_year' not in st.session_state:
-        st.session_state.last_year = 7
-
-    # Use a form to input student data
-    with st.form("single_student_form", clear_on_submit=False):
+    
+    with st.form("single_student_form", clear_on_submit=True):
         col1, col2 = st.columns(2)
         
         with col1:
-            subject = st.selectbox(
-                "Subject",
-                ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"],
-                index=["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"].index(st.session_state.last_subject)
-            )
-            year = st.selectbox(
-                "Year",
-                [5, 7, 8, 10, 11],
-                index=[5, 7, 8, 10, 11].index(st.session_state.last_year)
-            )
+            subject = st.selectbox("Subject", ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"])
+            year = st.selectbox("Year", [5, 7, 8, 10, 11])
             name = st.text_input("Student Name", placeholder="Enter first name only")
             gender = st.selectbox("Gender", ["Male", "Female"])
         
         with col2:
-            # Ensure selectboxes always return a valid number
-            att = st.selectbox(
-                "Attitude Band", 
-                options=[90,85,80,75,70,65,60,55,40],
-                index=3
-            )
+            att = st.selectbox("Attitude Band", 
+                             options=[90,85,80,75,70,65,60,55,40],
+                             index=3)
             
-            achieve = st.selectbox(
-                "Achievement Band",
-                options=[90,85,80,75,70,65,60,55,40],
-                index=3
-            )
+            achieve = st.selectbox("Achievement Band",
+                                 options=[90,85,80,75,70,65,60,55,40],
+                                 index=3)
             
-            target = st.selectbox(
-                "Target Band",
-                options=[90,85,80,75,70,65,60,55,40],
-                index=3
-            )
+            target = st.selectbox("Target Band",
+                                options=[90,85,80,75,70,65,60,55,40],
+                                index=3)
         
-        attitude_target = st.text_area(
-            "Optional Additional Comment",
-            placeholder="Add any additional comments here...",
-            height=60
-        )
+        attitude_target = st.text_area("Optional Additional Comment",
+                                     placeholder="Add any additional comments here...",
+                                     height=60)
         
         submitted = st.form_submit_button("Generate Comment")
     
-    # Only generate if name is entered
-    if submitted:
-        if not name.strip():
-            st.error("Please enter the student name")
-            st.stop()
-
-        # Validate rapid submission
+    if submitted and name:
         if not validate_upload_rate():
             st.stop()
         
-        # Ensure all inputs are valid
-        try:
-            name_clean = sanitize_input(name)
-            subject_safe = subject if subject else st.session_state.last_subject
-            year_safe = int(year) if year else st.session_state.last_year
-            gender_safe = gender if gender else "Male"
-            att_safe = int(att) if att else 75
-            achieve_safe = int(achieve) if achieve else 75
-            target_safe = int(target) if target else 75
-            optional_safe = attitude_target if attitude_target else None
-        except Exception as e:
-            st.error(f"Error preparing inputs: {e}")
-            st.stop()
+        name = sanitize_input(name)
         
         with st.spinner("Generating comment..."):
             comment = generate_comment(
-                subject=subject_safe,
-                year=year_safe,
-                name=name_clean,
-                gender=gender_safe,
-                att=att_safe,
-                achieve=achieve_safe,
-                target=target_safe,
-                optional_text=optional_safe
+                subject=subject,
+                year=year,
+                name=name,
+                gender=gender,
+                att=att,
+                achieve=achieve,
+                target=target,
+                optional_text=attitude_target
             )
             char_count = len(comment)
         
@@ -523,21 +729,104 @@ if app_mode == "Single Student":
             st.session_state.all_comments = []
         
         student_entry = {
-            'name': name_clean,
-            'subject': subject_safe,
-            'year': year_safe,
+            'name': name,
+            'subject': subject,
+            'year': year,
             'comment': comment,
             'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M")
         }
         st.session_state.all_comments.append(student_entry)
         
-        # Save last selections
-        st.session_state.last_subject = subject_safe
-        st.session_state.last_year = year_safe
-        
         # Add another button
         if st.button("Add Another Student"):
+            # Save current selections
+            st.session_state.last_subject = subject
+            st.session_state.last_year = year
             st.rerun()
+
+# BATCH UPLOAD MODE
+elif app_mode == "Batch Upload":
+    st.subheader("Batch Upload (CSV)")
+    
+    st.info("""
+    **CSV Format Required:**
+    - Columns: Student Name, Gender, Subject, Year, Attitude, Achievement, Target
+    - Gender: Male/Female
+    - Subject: English/Maths/Science/ESL (IGCSE)/Chemistry
+    - Year: 5,7,8,10,11
+    - Bands: 90,85,80,75,70,65,60,55,40
+    """)
+    
+    # Example CSV
+    example_csv = """Student Name,Gender,Subject,Year,Attitude,Achievement,Target
+John,Male,English,7,75,80,85
+Sarah,Female,Maths,5,80,75,80
+Ahmed,Male,ESL (IGCSE),10,85,90,85
+Maria,Female,Chemistry,11,80,85,80"""
+    
+    st.download_button(
+        label="Download Example CSV",
+        data=example_csv,
+        file_name="example_students.csv",
+        mime="text/csv"
+    )
+    
+    uploaded_file = st.file_uploader("Choose CSV file", type=['csv'])
+    
+    if uploaded_file:
+        if not validate_upload_rate():
+            st.stop()
+        
+        is_valid, msg = validate_file(uploaded_file)
+        if not is_valid:
+            st.error(msg)
+            st.stop()
+        
+        with st.spinner("Processing CSV..."):
+            df = process_csv_securely(uploaded_file)
+        
+        if df is not None:
+            st.success(f"Processed {len(df)} students")
+            
+            with st.expander("Preview Data"):
+                st.dataframe(df.head())
+            
+            if st.button("Generate All Comments"):
+                if 'all_comments' not in st.session_state:
+                    st.session_state.all_comments = []
+                
+                progress_bar = st.progress(0)
+                
+                for idx, row in df.iterrows():
+                    progress = (idx + 1) / len(df)
+                    progress_bar.progress(progress)
+                    
+                    try:
+                        comment = generate_comment(
+                            subject=str(row.get('Subject', 'English')),
+                            year=int(row.get('Year', 7)),
+                            name=str(row.get('Student Name', '')),
+                            gender=str(row.get('Gender', '')),
+                            att=int(row.get('Attitude', 75)),
+                            achieve=int(row.get('Achievement', 75)),
+                            target=int(row.get('Target', 75))
+                        )
+                        
+                        student_entry = {
+                            'name': sanitize_input(str(row.get('Student Name', ''))),
+                            'subject': str(row.get('Subject', 'English')),
+                            'year': int(row.get('Year', 7)),
+                            'comment': comment,
+                            'timestamp': datetime.now().strftime("%Y-%m-d %H:%M")
+                        }
+                        st.session_state.all_comments.append(student_entry)
+                        
+                    except Exception as e:
+                        st.error(f"Error processing row {idx + 1}: {e}")
+                
+                progress_bar.empty()
+                st.success(f"Generated {len(df)} comments!")
+                st.session_state.last_upload_time = datetime.now()
 
 # PRIVACY INFO MODE
 elif app_mode == "Privacy Info":
