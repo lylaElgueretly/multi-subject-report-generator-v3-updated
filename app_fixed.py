@@ -227,7 +227,24 @@ def truncate_comment(comment, target=TARGET_CHARS):
     if "." in truncated:
         truncated = truncated[:truncated.rfind(".")+1]
     return truncated
-
+    
+def fix_sentence_capitalization(text):
+    """Fix lowercase letters after periods."""
+    if not text:
+        return text
+    # Simple fix: capitalize after periods
+    result = ""
+    capitalize_next = True
+    for char in text:
+        if capitalize_next and char.isalpha():
+            result += char.upper()
+            capitalize_next = False
+        else:
+            result += char
+        if char in ".!?":
+            capitalize_next = True
+    return result
+    
 def fix_pronouns_in_text(text, pronoun, possessive):
     """Fix gender pronouns in statement text"""
     if not text:
@@ -582,13 +599,13 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         if not comment_parts[i].endswith('.'):
             comment_parts[i] += '.'
     
-    # Join comment parts
+      # Join comment parts
     comment = " ".join([c for c in comment_parts if c])
-    comment = truncate_comment(comment, TARGET_CHARS)
     
-    # Ensure comment ends with period
-    if not comment.endswith('.'):
-        comment = comment.rstrip(' ,;') + '.'
+    # FIX: Capitalize sentences properly
+    comment = fix_sentence_capitalization(comment)
+    
+    comment = truncate_comment(comment, TARGET_CHARS)
     
     return comment
 
