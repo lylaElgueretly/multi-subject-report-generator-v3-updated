@@ -292,13 +292,14 @@ st.title("CommentCraft")
 # SINGLE STUDENT MODE
 if app_mode == "Single Student":
     st.subheader("Single Student Entry")
-    
-    # Initialize defaults if not exist
+
+    # Ensure last_subject and last_year exist
     if 'last_subject' not in st.session_state:
         st.session_state.last_subject = "English"
     if 'last_year' not in st.session_state:
         st.session_state.last_year = 7
 
+    # Use a form to input student data
     with st.form("single_student_form", clear_on_submit=False):
         col1, col2 = st.columns(2)
         
@@ -317,6 +318,7 @@ if app_mode == "Single Student":
             gender = st.selectbox("Gender", ["Male", "Female"])
         
         with col2:
+            # Ensure selectboxes always return a valid number
             att = st.selectbox(
                 "Attitude Band", 
                 options=[90,85,80,75,70,65,60,55,40],
@@ -343,22 +345,40 @@ if app_mode == "Single Student":
         
         submitted = st.form_submit_button("Generate Comment")
     
-    if submitted and name:
+    # Only generate if name is entered
+    if submitted:
+        if not name.strip():
+            st.error("Please enter the student name")
+            st.stop()
+
+        # Validate rapid submission
         if not validate_upload_rate():
             st.stop()
         
-        name = sanitize_input(name)
+        # Ensure all inputs are valid
+        try:
+            name_clean = sanitize_input(name)
+            subject_safe = subject if subject else st.session_state.last_subject
+            year_safe = int(year) if year else st.session_state.last_year
+            gender_safe = gender if gender else "Male"
+            att_safe = int(att) if att else 75
+            achieve_safe = int(achieve) if achieve else 75
+            target_safe = int(target) if target else 75
+            optional_safe = attitude_target if attitude_target else None
+        except Exception as e:
+            st.error(f"Error preparing inputs: {e}")
+            st.stop()
         
         with st.spinner("Generating comment..."):
             comment = generate_comment(
-                subject=subject,
-                year=year,
-                name=name,
-                gender=gender,
-                att=att,
-                achieve=achieve,
-                target=target,
-                optional_text=attitude_target
+                subject=subject_safe,
+                year=year_safe,
+                name=name_clean,
+                gender=gender_safe,
+                att=att_safe,
+                achieve=achieve_safe,
+                target=target_safe,
+                optional_text=optional_safe
             )
             char_count = len(comment)
         
@@ -383,17 +403,17 @@ if app_mode == "Single Student":
             st.session_state.all_comments = []
         
         student_entry = {
-            'name': name,
-            'subject': subject,
-            'year': year,
+            'name': name_clean,
+            'subject': subject_safe,
+            'year': year_safe,
             'comment': comment,
             'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M")
         }
         st.session_state.all_comments.append(student_entry)
         
-        # Save last selections for next comment
-        st.session_state.last_subject = subject
-        st.session_state.last_year = year
+        # Save last selections
+        st.session_state.last_subject = subject_safe
+        st.session_state.last_year = year_safe
         
         # Add another button
         if st.button("Add Another Student"):
