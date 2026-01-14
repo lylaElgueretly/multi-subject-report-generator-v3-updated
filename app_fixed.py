@@ -661,12 +661,20 @@ Close browser tab to completely erase all data. For use with anonymized student 
 if app_mode == "Single Student":
     st.subheader("Single Student Entry")
     
-    with st.form("single_student_form", clear_on_submit=True):
+   with st.form("single_student_form", clear_on_submit=True):
         col1, col2 = st.columns(2)
         
         with col1:
-            subject = st.selectbox("Subject", ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"])
-            year = st.selectbox("Year", [5, 7, 8, 10, 11])
+            # Get subject options and find index of last used subject
+            subject_options = ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"]
+            subject_index = subject_options.index(st.session_state.last_subject) if st.session_state.last_subject in subject_options else 0
+            subject = st.selectbox("Subject", subject_options, index=subject_index)
+            
+            # Get year options and find index of last used year
+            year_options = [5, 7, 8, 10, 11]
+            year_index = year_options.index(st.session_state.last_year) if st.session_state.last_year in year_options else 1
+            year = st.selectbox("Year", year_options, index=year_index)
+            
             name = st.text_input("Student Name", placeholder="Enter first name only")
             gender = st.selectbox("Gender", ["Male", "Female"])
         
