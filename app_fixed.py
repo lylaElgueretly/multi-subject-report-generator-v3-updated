@@ -351,3 +351,187 @@ if app_mode == "Single Student":
         
         if st.button("Add Another Student"):
             st.rerun()
+
+# BATCH UPLOAD MODE
+elif app_mode == "Batch Upload":
+    st.subheader("Batch Upload (CSV)")
+    
+    st.info("""
+    **CSV Format Required:**
+    - Columns: Student Name, Gender, Subject, Year, Attitude, Achievement, Target
+    - Gender: Male/Female
+    - Subject: English/Maths/Science/ESL (IGCSE)/Chemistry
+    - Year: 5,7,8,10,11
+    - Bands: 90,85,80,75,70,65,60,55,40
+    """)
+    
+    # Example CSV
+    example_csv = """Student Name,Gender,Subject,Year,Attitude,Achievement,Target
+John,Male,English,7,75,80,85
+Sarah,Female,Maths,5,80,75,80
+Ahmed,Male,ESL (IGCSE),10,85,90,85
+Maria,Female,Chemistry,11,80,85,80"""
+    
+    st.download_button(
+        label="Download Example CSV",
+        data=example_csv,
+        file_name="example_students.csv",
+        mime="text/csv"
+    )
+    
+    uploaded_file = st.file_uploader("Choose CSV file", type=['csv'])
+    
+    if uploaded_file:
+        if not validate_upload_rate():
+            st.stop()
+        
+        is_valid, msg = validate_file(uploaded_file)
+        if not is_valid:
+            st.error(msg)
+            st.stop()
+        
+        with st.spinner("Processing CSV..."):
+            df = process_csv_securely(uploaded_file)
+        
+        if df is not None:
+            st.success(f"Processed {len(df)} students")
+            
+            with st.expander("Preview Data"):
+                st.dataframe(df.head())
+            
+            if st.button("Generate All Comments"):
+                if 'all_comments' not in st.session_state:
+                    st.session_state.all_comments = []
+                
+                progress_bar = st.progress(0)
+                
+                for idx, row in df.iterrows():
+                    progress = (idx + 1) / len(df)
+                    progress_bar.progress(progress)
+                    
+                    try:
+                        comment = generate_comment(
+                            subject=str(row.get('Subject', 'English')),
+                            year=int(row.get('Year', 7)),
+                            name=str(row.get('Student Name', '')),
+                            gender=str(row.get('Gender', '')),
+                            att=int(row.get('Attitude', 75)),
+                            achieve=int(row.get('Achievement', 75)),
+                            target=int(row.get('Target', 75))
+                        )
+                        
+                        student_entry = {
+                            'name': sanitize_input(str(row.get('Student Name', ''))),
+                            'subject': str(row.get('Subject', 'English')),
+                            'year': int(row.get('Year', 7)),
+                            'comment': comment,
+                            'timestamp': datetime.now().strftime("%Y-%m-d %H:%M")
+                        }
+                        st.session_state.all_comments.append(student_entry)
+                        
+                    except Exception as e:
+                        st.error(f"Error processing row {idx + 1}: {e}")
+                
+                progress_bar.empty()
+                st.success(f"Generated {len(df)} comments!")
+                st.session_state.last_upload_time = datetime.now()
+
+# PRIVACY INFO MODE
+elif app_mode == "Privacy Info":
+    st.subheader("Privacy & Security Information")
+    
+    st.markdown("""
+    ### Data Protection
+    
+    **How we handle data:**
+    - All processing occurs in your browser's memory
+    - No student data is sent to external servers
+    - Temporary files are created and immediately deleted
+    - No database or persistent storage is used
+    
+    **Security features:**
+    1. **Input Sanitization** - Removes special characters
+    2. **Rate Limiting** - Prevents system abuse
+    3. **File Validation** - Checks file size and type
+    4. **Auto-Cleanup** - Temporary files automatically deleted
+    5. **Memory Clearing** - All data erased on browser close
+    
+    **Best practices:**
+    - Use only first names or student IDs
+    - Close browser tab when finished
+    - Download reports immediately
+    - Use on school-managed devices for maximum privacy
+    """)
+
+# DOWNLOAD SECTION
+if 'all_comments' in st.session_state and st.session_state.all_comments:
+    st.markdown("---")
+    st.subheader("Download Reports")
+    
+    total_comments = len(st.session_state.all_comments)
+    st.info(f"You have {total_comments} generated comment(s)")
+    
+    # Preview
+    with st.expander(f"Preview Comments ({total_comments})"):
+        for idx, entry in enumerate(st.session_state.all_comments, 1):
+            st.markdown(f"**{idx}. {entry['name']}** ({entry['subject']} Year {entry['year']})")
+            st.write(entry['comment'])
+            st.markdown("---")
+    
+    # Download options
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        if st.button("Word Document"):
+            doc = Document()
+            doc.add_heading('Report Comments', 0)
+            doc.add_paragraph(f'Generated: {datetime.now().strftime("%Y-%m-%d %H:%M")}')
+            doc.add_paragraph(f'Total Students: {total_comments}')
+            doc.add_paragraph('')
+            
+            for entry in st.session_state.all_comments:
+                doc.add_heading(f"{entry['name']} - {entry['subject']} Year {entry['year']}", level=2)
+                doc.add_paragraph(entry['comment'])
+                doc.add_paragraph('')
+            
+            bio = io.BytesIO()
+            doc.save(bio)
+            
+            st.download_button(
+                label="Download Word File",
+                data=bio.getvalue(),
+                file_name=f"report_comments_{datetime.now().strftime('%Y%m%d_%H%M')}.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            )
+    
+    with col2:
+        if st.button("CSV Export"):
+            csv_data = []
+            for entry in st.session_state.all_comments:
+                csv_data.append({
+                    'Student Name': entry['name'],
+                    'Subject': entry['subject'],
+                    'Year': entry['year'],
+                    'Comment': entry['comment'],
+                    'Generated': entry['timestamp']
+                })
+            
+            df_export = pd.DataFrame(csv_data)
+            csv_bytes = df_export.to_csv(index=False).encode('utf-8')
+            
+            st.download_button(
+                label="Download CSV",
+                data=csv_bytes,
+                file_name=f"report_comments_{datetime.now().strftime('%Y%m%d_%H%M')}.csv",
+                mime="text/csv"
+            )
+    
+    with col3:
+        if st.button("Clear All", type="secondary"):
+            st.session_state.all_comments = []
+            st.success("All comments cleared!")
+            st.rerun()
+
+# FOOTER
+st.markdown("---")
+st.caption("CommentCraft v4.0 • Secure & Private")
