@@ -40,6 +40,8 @@ if 'app_initialized' not in st.session_state:
     st.session_state.upload_count = 0
     st.session_state.last_upload_time = datetime.now()
     st.session_state.generated_files = []
+    st.session_state.last_subject = "English"
+    st.session_state.last_year = 7
 
 # IMPORT STATEMENT FILES (directly from repository)
 try:
@@ -227,7 +229,7 @@ def truncate_comment(comment, target=TARGET_CHARS):
     if "." in truncated:
         truncated = truncated[:truncated.rfind(".")+1]
     return truncated
-    
+
 def fix_sentence_capitalization(text):
     """Fix lowercase letters after periods."""
     if not text:
@@ -244,7 +246,7 @@ def fix_sentence_capitalization(text):
         if char in ".!?":
             capitalize_next = True
     return result
-    
+
 def fix_pronouns_in_text(text, pronoun, possessive):
     """Fix gender pronouns in statement text"""
     if not text:
@@ -599,12 +601,13 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         if not comment_parts[i].endswith('.'):
             comment_parts[i] += '.'
     
-      # Join comment parts
+    # Join comment parts
     comment = " ".join([c for c in comment_parts if c])
     
-    # FIX: Capitalize sentences properly
+    # FIX: Apply sentence capitalization
     comment = fix_sentence_capitalization(comment)
     
+    # Truncate to target length
     comment = truncate_comment(comment, TARGET_CHARS)
     
     return comment
@@ -636,6 +639,8 @@ with st.sidebar:
         st.session_state.app_initialized = True
         st.session_state.upload_count = 0
         st.session_state.last_upload_time = datetime.now()
+        st.session_state.last_subject = "English"
+        st.session_state.last_year = 7
         st.success("All data cleared!")
         st.rerun()
 
@@ -656,20 +661,21 @@ if app_mode == "Single Student":
         col1, col2 = st.columns(2)
         
         with col1:
-            subject = st.selectbox(
-                "Subject", 
-                ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"],
-                index=["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"].index(
-                    st.session_state.get("last_subject", "English")
-                )
-            )
-            year = st.selectbox(
-                "Year", 
-                [5, 7, 8, 10, 11],
-                index=[5, 7, 8, 10, 11].index(
-                    st.session_state.get("last_year", 7)
-                )
-            )
+            # Get subject index
+            subjects = ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"]
+            subject_index = 0
+            if st.session_state.last_subject in subjects:
+                subject_index = subjects.index(st.session_state.last_subject)
+            
+            subject = st.selectbox("Subject", subjects, index=subject_index)
+            
+            # Get year index
+            years = [5, 7, 8, 10, 11]
+            year_index = 1  # Default to 7
+            if st.session_state.last_year in years:
+                year_index = years.index(st.session_state.last_year)
+            
+            year = st.selectbox("Year", years, index=year_index)
             name = st.text_input("Student Name", placeholder="Enter first name only")
             gender = st.selectbox("Gender", ["Male", "Female"])
         
@@ -741,8 +747,12 @@ if app_mode == "Single Student":
         st.session_state.all_comments.append(student_entry)
         
         # Add another button
-                if st.button("Add Another Student"):
+        if st.button("Add Another Student"):
+            # Save current selections
+            st.session_state.last_subject = subject
+            st.session_state.last_year = year
             st.rerun()
+
 # BATCH UPLOAD MODE
 elif app_mode == "Batch Upload":
     st.subheader("Batch Upload (CSV)")
