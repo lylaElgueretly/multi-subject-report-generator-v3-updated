@@ -1,72 +1,72 @@
 # statements_igcse_0620_chemistry.py
-# Chemistry statements for IGCSE 0620 curriculum
+# Skills-based Chemistry statements for IGCSE 0620 curriculum
 
 # -----------------------
 # Opening phrases
 # -----------------------
 opening_phrases = [
     "In IGCSE Chemistry this term,",
-    "Throughout the Chemistry course this term,",
-    "During Chemistry 0620 lessons this term,",
-    "In the study of IGCSE Chemistry this term,",
-    "This term in Chemistry,"
+    "Throughout Chemistry 0620 lessons this term,",
+    "During her Chemistry studies this term,",
+    "Over the course of this Chemistry term,",
+    "This term in IGCSE Chemistry,"
 ]
 
 # -----------------------
-# Attitude towards Chemistry
+# Attitude & learning behaviours (skills-focused)
 # -----------------------
 attitude_bank = {
-    90: "demonstrated exceptional scientific curiosity and independent learning skills. She designed sophisticated experiments independently and showed deep engagement with complex chemical theory.",
-    85: "showed outstanding commitment to Chemistry, consistently asking insightful questions and displaying excellent practical laboratory technique throughout all investigations.",
-    80: "approached Chemistry with genuine enthusiasm, actively participating in discussions and applying theoretical knowledge effectively in both written work and practical activities.",
-    75: "maintained consistent effort throughout the term, showing reliable engagement with both theoretical concepts and laboratory activities. She worked steadily to develop her understanding.",
-    70: "was generally focused during lessons and followed experimental procedures carefully. She completed assignments to a satisfactory standard and responded well to guidance.",
-    65: "showed steady engagement but sometimes required encouragement to tackle more challenging chemical concepts. With support, she participated meaningfully in practical work.",
-    60: "needed regular support to maintain focus during complex topics and required guidance with practical techniques. She showed improvement when given structured tasks.",
-    55: "required frequent reminders to stay engaged with theoretical content and needed step-by-step support during experiments. She worked best with clear, directed guidance.",
-    40: "found it challenging to sustain interest in abstract chemical concepts and needed substantial scaffolding for practical work. She made progress with intensive support.",
-    0:  "required intensive, individualized support to access the Chemistry curriculum and engage meaningfully with learning activities throughout the term."
+    90: "demonstrated exceptional scientific curiosity and a highly independent approach to learning. She consistently took initiative, reflected critically on her work, and showed maturity in responding to feedback.",
+    85: "showed outstanding commitment to developing her Chemistry skills. She asked perceptive questions, engaged actively in lessons, and demonstrated a strong willingness to refine her understanding.",
+    80: "approached Chemistry with enthusiasm and a positive attitude. She contributed confidently to discussions and showed clear effort to improve both written and practical work.",
+    75: "maintained consistent effort throughout the term. She engaged reliably in learning activities and demonstrated a responsible attitude towards developing her skills.",
+    70: "was generally focused in lessons and responded appropriately to guidance. She demonstrated a cooperative attitude and steady engagement with learning tasks.",
+    65: "showed developing engagement, though she sometimes required encouragement to persist with more demanding tasks. With support, she demonstrated a positive learning attitude.",
+    60: "required regular support to maintain focus, particularly when tasks involved extended reasoning or multi-step processes. She showed improvement when learning was clearly structured.",
+    55: "needed frequent reminders to remain engaged and relied heavily on teacher guidance. She benefited most from short, clearly defined tasks.",
+    40: "found it challenging to sustain engagement independently and required significant encouragement and scaffolding to participate effectively.",
+    0:  "required intensive, individualized support to engage with learning activities and develop basic study habits in Chemistry."
 }
 
 # -----------------------
-# Chemistry knowledge & skills
+# Chemistry skills & application (IGCSE AO-aligned)
 # -----------------------
 chemistry_bank = {
-    90: "demonstrated mastery across all Chemistry topics. She expertly explained complex concepts including equilibrium, electrochemistry, and organic reaction mechanisms. In practical work, she designed and conducted precise, independent investigations, analyzing data with sophistication.",
-    85: "showed excellent understanding of chemical principles. She confidently applied knowledge to solve complex problems, analyzed experimental data accurately, and explained industrial applications of chemistry with clarity. Her practical technique was consistently precise and methodical.",
-    80: "displayed secure understanding of core IGCSE concepts including stoichiometry, bonding, and energy changes. She applied this knowledge accurately in written work and demonstrated good competence in practical activities such as titrations and qualitative analysis.",
-    75: "grasped fundamental chemical principles well. She explained processes like acid-base reactions, redox processes, and basic organic chemistry with developing clarity and accuracy. In practical work, she followed methods carefully and recorded observations systematically.",
-    70: "understood main chemical concepts and performed standard experiments competently. She showed ability to follow methods, make appropriate observations, and draw basic conclusions from experimental data with some guidance.",
-    65: "showed developing understanding of basic chemical ideas. She occasionally required support with more abstract concepts like mole calculations or reaction mechanisms. In practical work, she followed instructions with supervision and recorded results adequately.",
-    60: "demonstrated basic knowledge of chemical facts but needed structured support to apply this understanding to problem-solving or unfamiliar contexts. She completed practical work with step-by-step guidance and recorded observations with support.",
-    55: "grasped simple chemical ideas with considerable guidance. She found abstract concepts like atomic structure or chemical equations particularly challenging. In the laboratory, she required close supervision to complete basic procedures safely.",
-    40: "struggled to connect different areas of Chemistry and needed substantial support to understand fundamental principles and their applications. She required extensive guidance to complete practical work and interpret results.",
-    0:  "found it extremely difficult to access core Chemistry content, requiring intensive, individualized support for basic concepts. She needed constant supervision in the laboratory and significant assistance with written work."
+    90: "demonstrated exceptional proficiency in applying chemical knowledge to unfamiliar contexts. She analysed data with precision, constructed well-reasoned explanations, and independently designed and evaluated investigations using accurate scientific language.",
+    85: "showed strong ability to apply chemical principles logically and accurately. She analysed experimental results effectively, solved complex problems confidently, and communicated explanations with clarity and precision.",
+    80: "demonstrated secure skills in interpreting data, applying chemical concepts, and using appropriate scientific terminology. She completed practical tasks competently and showed growing confidence in extended written responses.",
+    75: "showed sound understanding and was able to apply knowledge to standard problems. She followed practical procedures accurately and recorded observations clearly, drawing reasonable conclusions from data.",
+    70: "demonstrated the ability to follow methods and apply familiar concepts appropriately. With guidance, she interpreted results and explained outcomes using basic scientific reasoning.",
+    65: "showed developing skills in applying chemical knowledge. She required support with multi-step calculations, data interpretation, and extended explanations but demonstrated progress over time.",
+    60: "demonstrated basic chemical understanding but needed structured support to apply this knowledge to problem-solving tasks. Practical work was completed with close guidance.",
+    55: "showed limited ability to apply chemical ideas independently. She required step-by-step support to complete calculations, interpret data, and carry out practical procedures safely.",
+    40: "struggled to apply chemical knowledge and required substantial scaffolding to interpret information, complete investigations, and explain results.",
+    0:  "found it extremely difficult to access core Chemistry skills, requiring intensive support to complete even highly scaffolded tasks and practical activities."
 }
 
 # -----------------------
-# Next steps / targets - IGCSE specific
+# Next steps / skill-based targets
 # -----------------------
 target_bank = {
-    90: "To extend her learning further, she should explore advanced topics beyond the syllabus and design independent investigations into chemical systems. She would benefit from critically evaluating industrial processes and their environmental impacts to deepen her analytical skills.",
-    85: "To develop greater depth, she should focus on analyzing complex reaction mechanisms and improving precision in quantitative analysis techniques. Applying chemical principles to novel, unfamiliar contexts will further strengthen her problem-solving abilities.",
-    80: "Next term, she should focus on mastering examination technique, particularly for extended response questions. Improving accuracy in practical investigations and developing more sophisticated data analysis skills will also be important areas for development.",
-    75: "For continued progress, she should practice applying chemical knowledge to unfamiliar scenarios and work on improving precision in quantitative techniques like titration. Developing clearer, more detailed explanations of reaction processes will strengthen her written communication.",
-    70: "To build on current understanding, she should work on strengthening stoichiometry and mole calculations, while improving experimental accuracy. Developing more detailed written explanations of chemical phenomena will also be beneficial for her progress.",
-    65: "Next term, she should develop confidence in writing and balancing chemical equations, and practice interpreting graphical data from experiments. Understanding the relationship between macroscopic observations and particulate theory will help consolidate her chemical understanding.",
-    60: "To improve further, she should focus on mastering basic laboratory techniques and understanding fundamental concepts like periodic table trends. Regular practice with chemical calculations and vocabulary revision will support her ongoing development.",
-    55: "For next term, she should practice naming chemical compounds correctly and writing simple balanced equations. Developing familiarity with basic practical procedures like filtration and crystallization will also be important areas for focus.",
-    40: "To build foundational knowledge, she should work on states of matter, simple separation techniques, and basic atomic structure. Regular revision of core chemical vocabulary and supervised practical experience will support her learning.",
-    0:  "To begin building Chemistry skills, she should start with highly supported activities focusing on laboratory safety and recognizing common equipment. Understanding basic chemical changes through simple, supervised experiments will provide essential foundations."
+    90: "To extend her skills further, she should challenge herself with unfamiliar problem-solving questions and independently evaluate the reliability of experimental data, including sources of error and limitations.",
+    85: "To progress further, she should continue refining her precision in calculations and focus on producing consistently detailed, well-structured extended responses under exam conditions.",
+    80: "Next term, she should focus on strengthening examination technique, particularly applying knowledge to unfamiliar contexts and improving the clarity of extended written explanations.",
+    75: "For continued progress, she should practise multi-step calculations and develop more detailed analytical explanations when interpreting experimental results.",
+    70: "To build confidence, she should work on linking observations to scientific explanations and improving accuracy when interpreting graphs and tables.",
+    65: "Next term, she should focus on developing fluency in calculations and practising structured explanations using correct scientific terminology.",
+    60: "To improve further, she should strengthen foundational skills in data interpretation, calculations, and laboratory procedures through regular guided practice.",
+    55: "She should focus on building confidence in basic calculations, following practical methods accurately, and using key scientific vocabulary correctly.",
+    40: "To build foundational skills, she should practise interpreting simple data, following clear experimental steps, and reinforcing core scientific language.",
+    0:  "Initial focus should be on developing basic laboratory safety awareness, recognising common equipment, and engaging with simple, supported investigative tasks."
 }
 
 # -----------------------
 # Closing remarks
 # -----------------------
 closer_bank = [
-    "Overall, steady progress was evident in both theoretical understanding and practical skills development throughout the term.",
-    "With continued dedication and focused practice, further improvement in chemical knowledge and investigative competence is anticipated next term.",
-    "The student demonstrated growing confidence in applying chemical principles and showed developing competence in essential laboratory techniques.",
-    "Continued engagement with both theoretical study and practical work will be essential for ongoing progress in Chemistry next term.",
-    "Noticeable progress was made in connecting different areas of the Chemistry curriculum as the term progressed."
+    "Overall, steady development was evident in her scientific skills and approach to learning throughout the term.",
+    "With continued practice and structured support, further progress in applying Chemistry skills is expected next term.",
+    "The student demonstrated developing confidence in practical and analytical skills over the course of the term.",
+    "Ongoing engagement with problem-solving and investigative tasks will be key to her continued progress in Chemistry.",
+    "Progress was evident in her ability to apply scientific reasoning and respond to feedback constructively."
 ]
