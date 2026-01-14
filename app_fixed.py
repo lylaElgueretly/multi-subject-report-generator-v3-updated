@@ -661,12 +661,20 @@ Close browser tab to completely erase all data. For use with anonymized student 
 if app_mode == "Single Student":
     st.subheader("Single Student Entry")
     
+    # Use session state values as defaults
+    default_subject_index = ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"].index(st.session_state.last_subject)
+    default_year_index = [5, 7, 8, 10, 11].index(st.session_state.last_year)
+    
     with st.form("single_student_form", clear_on_submit=True):
         col1, col2 = st.columns(2)
         
         with col1:
-            subject = st.selectbox("Subject", ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"])
-            year = st.selectbox("Year", [5, 7, 8, 10, 11])
+            subject = st.selectbox("Subject", 
+                                 ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"],
+                                 index=default_subject_index)
+            year = st.selectbox("Year", 
+                              [5, 7, 8, 10, 11],
+                              index=default_year_index)
             name = st.text_input("Student Name", placeholder="Enter first name only")
             gender = st.selectbox("Gender", ["Male", "Female"])
         
@@ -739,9 +747,6 @@ if app_mode == "Single Student":
         
         # Add another button
         if st.button("Add Another Student"):
-            # Save current selections
-            st.session_state.last_subject = subject
-            st.session_state.last_year = year
             st.rerun()
 
 # BATCH UPLOAD MODE
@@ -817,7 +822,7 @@ Maria,Female,Chemistry,11,80,85,80"""
                             'subject': str(row.get('Subject', 'English')),
                             'year': int(row.get('Year', 7)),
                             'comment': comment,
-                            'timestamp': datetime.now().strftime("%Y-%m-d %H:%M")
+                            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M")
                         }
                         st.session_state.all_comments.append(student_entry)
                         
