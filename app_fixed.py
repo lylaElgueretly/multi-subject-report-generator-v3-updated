@@ -20,248 +20,6 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
 
-# Custom CSS to reduce space and remove colors
-st.markdown("""
-<style>
-    /* Reduce space on top of the title */
-    .stApp > header {
-        padding-top: 1rem !important;
-    }
-    
-    /* Reduce space between navigation bar and title */
-    .block-container {
-        padding-top: 1rem !important;
-        padding-bottom: 1rem !important;
-    }
-    
-    /* Center the title and make it black */
-    h1 {
-        text-align: center !important;
-        margin-bottom: 0.5rem !important;
-        color: #000000 !important;
-    }
-    
-    /* Yellow background for privacy notice */
-    div[data-testid="stAlert"]:has(svg[data-testid="WarningIcon"]) {
-        background-color: #FFEB3B !important;
-        padding: 0.5rem 1rem !important;
-        border-radius: 4px !important;
-        margin-bottom: 1rem !important;
-    }
-    
-    /* Make privacy notice fit on one line */
-    div[data-testid="stAlert"]:has(svg[data-testid="WarningIcon"]) > div {
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-    }
-    
-    /* Remove all colored borders, shadows, boxes except yellow privacy */
-    .stAlert:not(:has(svg[data-testid="WarningIcon"])), 
-    .stWarning:not(:has(svg[data-testid="WarningIcon"])), 
-    .stSuccess, 
-    .stInfo, 
-    .stError {
-        border: none !important;
-        box-shadow: none !important;
-        background-color: #f8f8f8 !important;
-    }
-    
-    /* Remove colored borders from buttons and inputs */
-    .stButton > button, .stDownloadButton > button, .stFileUploader > div {
-        border: 1px solid #cccccc !important;
-        box-shadow: none !important;
-    }
-    
-    /* Remove colored borders from radio buttons */
-    .stRadio > div {
-        border: none !important;
-        background-color: white !important;
-    }
-    
-    /* Remove colored highlights from inputs */
-    .st-bb, .st-at, .st-af {
-        border-color: #cccccc !important;
-    }
-    
-    /* PURPLE BUTTONS - Consistent purple shade (#8A2BE2) */
-    
-    /* Main action buttons */
-    .stButton > button:not(:has-text("Clear All Data")):not(:has-text("Clear All")):not([kind="secondary"]) {
-        background-color: #8A2BE2 !important;
-        color: white !important;
-        border: none !important;
-    }
-    
-    /* Submit/Generate button */
-    .stButton > button:has-text("Generate Comment"),
-    .stButton > button:has-text("Generate All Comments") {
-        background-color: #8A2BE2 !important;
-        color: white !important;
-        border: none !important;
-    }
-    
-    /* Add Another button */
-    div[data-testid="stButton"] button:has-text("Add Another Student") {
-        background-color: #8A2BE2 !important;
-        color: white !important;
-        border: none !important;
-    }
-    
-    /* CSV download buttons */
-    div[data-testid="stButton"] button:has-text("Download Example CSV"),
-    div[data-testid="stDownloadButton"] button:has-text("Download CSV"),
-    div[data-testid="stButton"] button:has-text("Download Word File") {
-        background-color: #8A2BE2 !important;
-        color: white !important;
-        border: none !important;
-    }
-    
-    /* Make all backgrounds white */
-    .main, .stApp {
-        background-color: white !important;
-    }
-    
-    /* Remove any gradient backgrounds */
-    div[data-testid="stSidebar"],
-    .css-1d391kg,
-    .css-1lcbmhc,
-    .css-18e3th9 {
-        background-color: white !important;
-    }
-    
-    /* Remove sidebar colors */
-    .css-1lcbmhc {
-        border-right: 1px solid #f0f0f0 !important;
-    }
-    
-    /* Remove colored text in metrics */
-    [data-testid="stMetricValue"], [data-testid="stMetricLabel"] {
-        color: #333333 !important;
-    }
-    
-    /* Purple progress bars */
-    .stProgress > div > div {
-        background-color: #f0f0f0 !important;
-    }
-    
-    .stProgress > div > div > div {
-        background-color: #8A2BE2 !important;
-    }
-    
-    /* Remove blue from selected radio button */
-    .stRadio > div > label > div:first-child {
-        background-color: white !important;
-        border-color: #cccccc !important;
-    }
-    
-    /* Purple for checked radio button */
-    .stRadio > div > label > div:first-child > div {
-        background-color: #8A2BE2 !important;
-    }
-    
-    /* Remove blue from tabs/navigation */
-    .stTabs [data-baseweb="tab"] {
-        background-color: white !important;
-        color: #333333 !important;
-    }
-    
-    /* Remove blue from selected tab */
-    .stTabs [aria-selected="true"] {
-        background-color: #f0f0f0 !important;
-        color: #333333 !important;
-        border-color: #cccccc !important;
-    }
-    
-    /* Remove blue from select boxes */
-    .stSelectbox > div > div {
-        background-color: white !important;
-        border-color: #cccccc !important;
-    }
-    
-    /* Remove blue from text areas */
-    .stTextArea > div > div {
-        background-color: white !important;
-        border-color: #cccccc !important;
-    }
-    
-    /* Purple button hover effects */
-    .stButton > button:not(:has-text("Clear All Data")):not(:has-text("Clear All")):not([kind="secondary"]):hover,
-    .stButton > button:has-text("Generate Comment"):hover,
-    .stButton > button:has-text("Generate All Comments"):hover,
-    div[data-testid="stButton"] button:has-text("Add Another Student"):hover,
-    div[data-testid="stButton"] button:has-text("Download Example CSV"):hover,
-    div[data-testid="stDownloadButton"] button:has-text("Download CSV"):hover,
-    div[data-testid="stButton"] button:has-text("Download Word File"):hover {
-        background-color: #7a1bd2 !important;
-    }
-    
-    /* Grey hover for clear buttons */
-    .stButton > button:has-text("Clear All Data"):hover,
-    .stButton > button:has-text("Clear All"):hover {
-        background-color: #f0f0f0 !important;
-        border-color: #cccccc !important;
-    }
-    
-    /* Remove blue from form borders */
-    .stForm {
-        border-color: #cccccc !important;
-    }
-    
-    /* Remove blue from expander headers */
-    .streamlit-expanderHeader {
-        background-color: white !important;
-        border-color: #cccccc !important;
-    }
-    
-    /* Remove blue from success/warning/info boxes */
-    [data-testid="stAlert"]:not(:has(svg[data-testid="WarningIcon"])) {
-        background-color: #f8f8f8 !important;
-    }
-    
-    /* Remove any remaining blue backgrounds */
-    .st-emotion-cache-1v0mbdj {
-        background-color: white !important;
-    }
-    
-    /* Fix sidebar radio button selected state */
-    .stRadio > div[role="radiogroup"] > label[data-baseweb="radio"] > div:first-child {
-        border-color: #cccccc !important;
-    }
-    
-    .stRadio > div[role="radiogroup"] > label[data-baseweb="radio"] > div:first-child > div {
-        background-color: #8A2BE2 !important;
-    }
-    
-    /* Remove blue from metric containers */
-    [data-testid="stMetricContainer"] {
-        border: none !important;
-        background-color: white !important;
-    }
-    
-    /* Make all form elements white */
-    .stTextInput > div > div > input,
-    .stSelectbox > div > div > div,
-    .stTextArea > div > div > textarea {
-        background-color: white !important;
-    }
-    
-    /* Clear buttons styling (secondary buttons) */
-    .stButton > button[kind="secondary"] {
-        background-color: white !important;
-        color: #333333 !important;
-        border: 1px solid #cccccc !important;
-    }
-    
-    /* Form submit button styling */
-    [data-testid="baseButton-secondary"] {
-        background-color: #8A2BE2 !important;
-        color: white !important;
-        border: none !important;
-    }
-</style>
-""", unsafe_allow_html=True)
-
 # SECURITY & PRIVACY SETTINGS
 TARGET_CHARS = 500
 MAX_FILE_SIZE_MB = 5
@@ -282,24 +40,6 @@ if 'app_initialized' not in st.session_state:
     st.session_state.upload_count = 0
     st.session_state.last_upload_time = datetime.now()
     st.session_state.generated_files = []
-    
-# Initialize session state for form persistence
-if 'subject' not in st.session_state:
-    st.session_state.subject = "English"
-if 'year' not in st.session_state:
-    st.session_state.year = 7
-if 'name' not in st.session_state:
-    st.session_state.name = ""
-if 'gender' not in st.session_state:
-    st.session_state.gender = "Male"
-if 'att' not in st.session_state:
-    st.session_state.att = 75
-if 'achieve' not in st.session_state:
-    st.session_state.achieve = 75
-if 'target' not in st.session_state:
-    st.session_state.target = 75
-if 'attitude_target' not in st.session_state:
-    st.session_state.attitude_target = ""
 
 # IMPORT STATEMENT FILES (directly from repository)
 try:
@@ -507,46 +247,7 @@ def fix_pronouns_in_text(text, pronoun, possessive):
     text = re.sub(r'\bhimself\b', f"{pronoun}self", text, flags=re.IGNORECASE)
     text = re.sub(r'\bherself\b', f"{pronoun}self", text, flags=re.IGNORECASE)
     
-    # Additional British spelling conversions
-    text = text.replace("color", "colour")
-    text = text.replace("Color", "Colour")
-    text = text.replace("behavior", "behaviour")
-    text = text.replace("Behavior", "Behaviour")
-    text = text.replace("favorite", "favourite")
-    text = text.replace("Favorite", "Favourite")
-    text = text.replace("organize", "organise")
-    text = text.replace("Organize", "Organise")
-    text = text.replace("realize", "realise")
-    text = text.replace("Realize", "Realise")
-    text = text.replace("recognize", "recognise")
-    text = text.replace("Recognize", "Recognise")
-    text = text.replace("analyze", "analyse")
-    text = text.replace("Analyze", "Analyse")
-    text = text.replace("center", "centre")
-    text = text.replace("Center", "Centre")
-    text = text.replace("meter", "metre")
-    text = text.replace("Meter", "Metre")
-    text = text.replace("liter", "litre")
-    text = text.replace("Liter", "Litre")
-    
     return text
-
-def ensure_proper_capitalization(text):
-    """Ensure sentences start with capital letters"""
-    if not text:
-        return text
-    
-    # Split by sentences
-    sentences = re.split(r'(?<=[.!?])\s+', text)
-    capitalized_sentences = []
-    
-    for sentence in sentences:
-        if sentence:
-            # Capitalize first letter
-            sentence = sentence[0].upper() + sentence[1:] if sentence else sentence
-            capitalized_sentences.append(sentence)
-    
-    return ' '.join(capitalized_sentences)
 
 def generate_comment(subject, year, name, gender, att, achieve, target, optional_text=None):
     """Generate a report comment based on subject, year, and performance bands"""
@@ -564,23 +265,19 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             reading_text = fix_pronouns_in_text(reading_5_eng[achieve], p, p_poss)
-            reading_text = ensure_proper_capitalization(reading_text)
             if reading_text[0].islower():
-                reading_text = f"{p.capitalize()} {reading_text}"
-            reading_sentence = f"In reading, {lowercase_first(reading_text)}"
+                reading_text = f"{p} {reading_text}"
+            reading_sentence = f"In reading, {reading_text}"
             
             writing_text = fix_pronouns_in_text(writing_5_eng[achieve], p, p_poss)
-            writing_text = ensure_proper_capitalization(writing_text)
             if writing_text[0].islower():
-                writing_text = f"{p.capitalize()} {writing_text}"
-            writing_sentence = f"In writing, {lowercase_first(writing_text)}"
+                writing_text = f"{p} {writing_text}"
+            writing_sentence = f"In writing, {writing_text}"
             
             reading_target_text = fix_pronouns_in_text(target_5_eng[target], p, p_poss)
-            reading_target_text = ensure_proper_capitalization(reading_target_text)
             reading_target_sentence = f"For the next term, {p} should {lowercase_first(reading_target_text)}"
             
             writing_target_text = fix_pronouns_in_text(target_write_5_eng[target], p, p_poss)
-            writing_target_text = ensure_proper_capitalization(writing_target_text)
             writing_target_sentence = f"Additionally, {p} should {lowercase_first(writing_target_text)}"
             
             closer_sentence = random.choice(closer_5_eng)
@@ -590,7 +287,8 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
                 reading_sentence,
                 writing_sentence,
                 reading_target_sentence,
-                writing_target_sentence
+                writing_target_sentence,
+                closer_sentence
             ]
             
         elif year == 7:
@@ -599,23 +297,19 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             reading_text = fix_pronouns_in_text(reading_7_eng[achieve], p, p_poss)
-            reading_text = ensure_proper_capitalization(reading_text)
             if reading_text[0].islower():
-                reading_text = f"{p.capitalize()} {reading_text}"
-            reading_sentence = f"In reading, {lowercase_first(reading_text)}"
+                reading_text = f"{p} {reading_text}"
+            reading_sentence = f"In reading, {reading_text}"
             
             writing_text = fix_pronouns_in_text(writing_7_eng[achieve], p, p_poss)
-            writing_text = ensure_proper_capitalization(writing_text)
             if writing_text[0].islower():
-                writing_text = f"{p.capitalize()} {writing_text}"
-            writing_sentence = f"In writing, {lowercase_first(writing_text)}"
+                writing_text = f"{p} {writing_text}"
+            writing_sentence = f"In writing, {writing_text}"
             
             reading_target_text = fix_pronouns_in_text(target_7_eng[target], p, p_poss)
-            reading_target_text = ensure_proper_capitalization(reading_target_text)
             reading_target_sentence = f"For the next term, {p} should {lowercase_first(reading_target_text)}"
             
             writing_target_text = fix_pronouns_in_text(target_write_7_eng[target], p, p_poss)
-            writing_target_text = ensure_proper_capitalization(writing_target_text)
             writing_target_sentence = f"Additionally, {p} should {lowercase_first(writing_target_text)}"
             
             closer_sentence = random.choice(closer_7_eng)
@@ -625,7 +319,8 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
                 reading_sentence,
                 writing_sentence,
                 reading_target_sentence,
-                writing_target_sentence
+                writing_target_sentence,
+                closer_sentence
             ]
             
         else:  # Year 8
@@ -634,23 +329,19 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             reading_text = fix_pronouns_in_text(reading_8_eng[achieve], p, p_poss)
-            reading_text = ensure_proper_capitalization(reading_text)
             if reading_text[0].islower():
-                reading_text = f"{p.capitalize()} {reading_text}"
-            reading_sentence = f"In reading, {lowercase_first(reading_text)}"
+                reading_text = f"{p} {reading_text}"
+            reading_sentence = f"In reading, {reading_text}"
             
             writing_text = fix_pronouns_in_text(writing_8_eng[achieve], p, p_poss)
-            writing_text = ensure_proper_capitalization(writing_text)
             if writing_text[0].islower():
-                writing_text = f"{p.capitalize()} {writing_text}"
-            writing_sentence = f"In writing, {lowercase_first(writing_text)}"
+                writing_text = f"{p} {writing_text}"
+            writing_sentence = f"In writing, {writing_text}"
             
             reading_target_text = fix_pronouns_in_text(target_8_eng[target], p, p_poss)
-            reading_target_text = ensure_proper_capitalization(reading_target_text)
             reading_target_sentence = f"For the next term, {p} should {lowercase_first(reading_target_text)}"
             
             writing_target_text = fix_pronouns_in_text(target_write_8_eng[target], p, p_poss)
-            writing_target_text = ensure_proper_capitalization(writing_target_text)
             writing_target_sentence = f"Additionally, {p} should {lowercase_first(writing_target_text)}"
             
             closer_sentence = random.choice(closer_8_eng)
@@ -660,7 +351,8 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
                 reading_sentence,
                 writing_sentence,
                 reading_target_sentence,
-                writing_target_sentence
+                writing_target_sentence,
+                closer_sentence
             ]
         
     elif subject == "Science":
@@ -670,13 +362,11 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             science_text = fix_pronouns_in_text(science_5_sci[achieve], p, p_poss)
-            science_text = ensure_proper_capitalization(science_text)
             if science_text[0].islower():
-                science_text = f"{p.capitalize()} {science_text}"
+                science_text = f"{p} {science_text}"
             science_sentence = science_text
             
             target_text = fix_pronouns_in_text(target_5_sci[target], p, p_poss)
-            target_text = ensure_proper_capitalization(target_text)
             target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
             
             closer_sentence = random.choice(closer_5_sci)
@@ -684,7 +374,8 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             comment_parts = [
                 attitude_sentence,
                 science_sentence,
-                target_sentence
+                target_sentence,
+                closer_sentence
             ]
             
         elif year == 7:
@@ -693,13 +384,11 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             science_text = fix_pronouns_in_text(science_7_sci[achieve], p, p_poss)
-            science_text = ensure_proper_capitalization(science_text)
             if science_text[0].islower():
-                science_text = f"{p.capitalize()} {science_text}"
+                science_text = f"{p} {science_text}"
             science_sentence = science_text
             
             target_text = fix_pronouns_in_text(target_7_sci[target], p, p_poss)
-            target_text = ensure_proper_capitalization(target_text)
             target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
             
             closer_sentence = random.choice(closer_7_sci)
@@ -707,7 +396,8 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             comment_parts = [
                 attitude_sentence,
                 science_sentence,
-                target_sentence
+                target_sentence,
+                closer_sentence
             ]
             
         else:  # Year 8
@@ -716,13 +406,11 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             science_text = fix_pronouns_in_text(science_8_sci[achieve], p, p_poss)
-            science_text = ensure_proper_capitalization(science_text)
             if science_text[0].islower():
-                science_text = f"{p.capitalize()} {science_text}"
+                science_text = f"{p} {science_text}"
             science_sentence = science_text
             
             target_text = fix_pronouns_in_text(target_8_sci[target], p, p_poss)
-            target_text = ensure_proper_capitalization(target_text)
             target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
             
             closer_sentence = random.choice(closer_8_sci)
@@ -730,7 +418,8 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             comment_parts = [
                 attitude_sentence,
                 science_sentence,
-                target_sentence
+                target_sentence,
+                closer_sentence
             ]
         
     elif subject == "Maths":
@@ -740,13 +429,11 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             maths_text = fix_pronouns_in_text(maths_5_math[achieve], p, p_poss)
-            maths_text = ensure_proper_capitalization(maths_text)
             if maths_text[0].islower():
-                maths_text = f"{p.capitalize()} {maths_text}"
+                maths_text = f"{p} {maths_text}"
             maths_sentence = maths_text
             
             target_text = fix_pronouns_in_text(target_5_math[target], p, p_poss)
-            target_text = ensure_proper_capitalization(target_text)
             target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
             
             closer_sentence = random.choice(closer_5_math)
@@ -754,7 +441,8 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             comment_parts = [
                 attitude_sentence,
                 maths_sentence,
-                target_sentence
+                target_sentence,
+                closer_sentence
             ]
             
         elif year == 7:
@@ -763,13 +451,11 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             maths_text = fix_pronouns_in_text(maths_7_math[achieve], p, p_poss)
-            maths_text = ensure_proper_capitalization(maths_text)
             if maths_text[0].islower():
-                maths_text = f"{p.capitalize()} {maths_text}"
+                maths_text = f"{p} {maths_text}"
             maths_sentence = maths_text
             
             target_text = fix_pronouns_in_text(target_7_math[target], p, p_poss)
-            target_text = ensure_proper_capitalization(target_text)
             target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
             
             closer_sentence = random.choice(closer_7_math)
@@ -777,7 +463,8 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             comment_parts = [
                 attitude_sentence,
                 maths_sentence,
-                target_sentence
+                target_sentence,
+                closer_sentence
             ]
             
         else:  # Year 8
@@ -786,13 +473,11 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             attitude_sentence = f"{opening} {name} {attitude_text}"
             
             maths_text = fix_pronouns_in_text(maths_8_math[achieve], p, p_poss)
-            maths_text = ensure_proper_capitalization(maths_text)
             if maths_text[0].islower():
-                maths_text = f"{p.capitalize()} {maths_text}"
+                maths_text = f"{p} {maths_text}"
             maths_sentence = maths_text
             
             target_text = fix_pronouns_in_text(target_8_math[target], p, p_poss)
-            target_text = ensure_proper_capitalization(target_text)
             target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
             
             closer_sentence = random.choice(closer_8_math)
@@ -800,7 +485,8 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             comment_parts = [
                 attitude_sentence,
                 maths_sentence,
-                target_sentence
+                target_sentence,
+                closer_sentence
             ]
         
     elif subject == "ESL (IGCSE)":
@@ -810,39 +496,33 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         
         # Reading
         reading_text = fix_pronouns_in_text(reading_esl[achieve], p, p_poss)
-        reading_text = ensure_proper_capitalization(reading_text)
         if reading_text[0].islower():
-            reading_text = f"{p.capitalize()} {reading_text}"
-        reading_sentence = f"In reading, {lowercase_first(reading_text)}"
+            reading_text = f"{p} {reading_text}"
+        reading_sentence = f"In reading, {reading_text}"
         
         # Writing
         writing_text = fix_pronouns_in_text(writing_esl[achieve], p, p_poss)
-        writing_text = ensure_proper_capitalization(writing_text)
         if writing_text[0].islower():
-            writing_text = f"{p.capitalize()} {writing_text}"
-        writing_sentence = f"In writing, {lowercase_first(writing_text)}"
+            writing_text = f"{p} {writing_text}"
+        writing_sentence = f"In writing, {writing_text}"
         
         # Speaking
         speaking_text = fix_pronouns_in_text(speaking_esl[achieve], p, p_poss)
-        speaking_text = ensure_proper_capitalization(speaking_text)
         if speaking_text[0].islower():
-            speaking_text = f"{p.capitalize()} {speaking_text}"
-        speaking_sentence = f"In speaking, {lowercase_first(speaking_text)}"
+            speaking_text = f"{p} {speaking_text}"
+        speaking_sentence = f"In speaking, {speaking_text}"
         
         # Listening
         listening_text = fix_pronouns_in_text(listening_esl[achieve], p, p_poss)
-        listening_text = ensure_proper_capitalization(listening_text)
         if listening_text[0].islower():
-            listening_text = f"{p.capitalize()} {listening_text}"
-        listening_sentence = f"In listening, {lowercase_first(listening_text)}"
+            listening_text = f"{p} {listening_text}"
+        listening_sentence = f"In listening, {listening_text}"
         
         # Targets
         reading_target_text = fix_pronouns_in_text(target_reading_esl[target], p, p_poss)
-        reading_target_text = ensure_proper_capitalization(reading_target_text)
         reading_target_sentence = f"For the next term, {p} should {lowercase_first(reading_target_text)}"
         
         writing_target_text = fix_pronouns_in_text(target_write_esl[target], p, p_poss)
-        writing_target_text = ensure_proper_capitalization(writing_target_text)
         writing_target_sentence = f"Additionally, {p} should {lowercase_first(writing_target_text)}"
         
         closer_sentence = random.choice(closer_esl)
@@ -854,7 +534,8 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             speaking_sentence,
             listening_sentence,
             reading_target_sentence,
-            writing_target_sentence
+            writing_target_sentence,
+            closer_sentence
         ]
         
     elif subject == "Chemistry":
@@ -862,39 +543,12 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         attitude_text = fix_pronouns_in_text(attitude_chem[att], p, p_poss)
         attitude_sentence = f"{opening} {name} {attitude_text}"
         
-        # Handle Chemistry achievement text which may have multiple sentences
         chemistry_text = fix_pronouns_in_text(chemistry_chem[achieve], p, p_poss)
-        chemistry_text = ensure_proper_capitalization(chemistry_text)
-        
-        # Split into sentences and ensure each starts with pronoun
-        sentences = re.split(r'(?<=[.!?])\s+', chemistry_text)
-        fixed_sentences = []
-        
-        for sentence in sentences:
-            if sentence:
-                # Remove any trailing period
-                sentence = sentence.strip()
-                if sentence.endswith('.'):
-                    sentence = sentence[:-1]
-                
-                # If sentence starts with uppercase verb (no pronoun), add pronoun
-                if sentence and sentence[0].isupper():
-                    words = sentence.split()
-                    if len(words) > 0:
-                        first_word = words[0]
-                        # Check if it's a verb ending in -ed
-                        if first_word.endswith('ed'):
-                            sentence = f"{p.capitalize()} {lowercase_first(sentence)}"
-                        # Check specific verbs
-                        elif first_word in ['Grasped', 'Explained', 'Demonstrated', 'Showed']:
-                            sentence = f"{p.capitalize()} {lowercase_first(sentence)}"
-                
-                fixed_sentences.append(sentence + '.')
-        
-        chemistry_sentence = ' '.join(fixed_sentences)
+        if chemistry_text[0].islower():
+            chemistry_text = f"{p} {chemistry_text}"
+        chemistry_sentence = chemistry_text
         
         target_text = fix_pronouns_in_text(target_chem[target], p, p_poss)
-        target_text = ensure_proper_capitalization(target_text)
         target_sentence = f"For the next term, {p} should {lowercase_first(target_text)}"
         
         closer_sentence = random.choice(closer_chem)
@@ -902,58 +556,26 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         comment_parts = [
             attitude_sentence,
             chemistry_sentence,
-            target_sentence
+            target_sentence,
+            closer_sentence
         ]
     
     else:
         # Default fallback if subject not recognized
         comment_parts = [f"{name} has worked in {subject} this term."]
     
-    # ADD OPTIONAL TEXT TO COMMENT_PARTS
+    # Add optional text if provided - NOW AT THE END
     if optional_text:
-        optional_text = str(optional_text).strip()
+        optional_text = sanitize_input(optional_text)
         if optional_text:
-            # Sanitize and ensure proper formatting
-            optional_text = sanitize_input(optional_text, max_length=200)
-            
-            # Ensure optional text starts with capital letter
-            if optional_text and optional_text[0].islower():
-                optional_text = optional_text[0].upper() + optional_text[1:]
-            
-            # Add "Additionally" prefix and ensure it ends with period
             optional_sentence = f"Additionally, {lowercase_first(optional_text)}"
             if not optional_sentence.endswith('.'):
                 optional_sentence += '.'
-            
-            # Insert optional sentence before the closer
-            comment_parts.append(optional_sentence)
-    
-    # Add the closer sentence at the end
-    if subject == "English":
-        if year == 5:
-            comment_parts.append(random.choice(closer_5_eng))
-        elif year == 7:
-            comment_parts.append(random.choice(closer_7_eng))
-        else:  # Year 8
-            comment_parts.append(random.choice(closer_8_eng))
-    elif subject == "Science":
-        if year == 5:
-            comment_parts.append(random.choice(closer_5_sci))
-        elif year == 7:
-            comment_parts.append(random.choice(closer_7_sci))
-        else:  # Year 8
-            comment_parts.append(random.choice(closer_8_sci))
-    elif subject == "Maths":
-        if year == 5:
-            comment_parts.append(random.choice(closer_5_math))
-        elif year == 7:
-            comment_parts.append(random.choice(closer_7_math))
-        else:  # Year 8
-            comment_parts.append(random.choice(closer_8_math))
-    elif subject == "ESL (IGCSE)":
-        comment_parts.append(random.choice(closer_esl))
-    elif subject == "Chemistry":
-        comment_parts.append(random.choice(closer_chem))
+            # Insert before the closer sentence (second to last position)
+            if comment_parts:
+                comment_parts.insert(-1, optional_sentence)
+            else:
+                comment_parts.append(optional_sentence)
     
     # Ensure all sentences end with period
     for i in range(len(comment_parts)):
@@ -962,19 +584,11 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
     
     # Join comment parts
     comment = " ".join([c for c in comment_parts if c])
-    
-    # Truncate to target length
     comment = truncate_comment(comment, TARGET_CHARS)
     
     # Ensure comment ends with period
     if not comment.endswith('.'):
         comment = comment.rstrip(' ,;') + '.'
-    
-    # Final capitalization check
-    comment = ensure_proper_capitalization(comment)
-    
-    # Final fix: Replace any remaining " he " at sentence start with "He "
-    comment = re.sub(r'(^|\. )h(e |im |is |er )', lambda m: m.group(0).replace('h', 'H'), comment)
     
     return comment
 
@@ -987,8 +601,7 @@ with st.sidebar:
     
     app_mode = st.radio(
         "Choose Mode",
-        ["Single Student", "Batch Upload", "Privacy Info"],
-        key="app_mode"
+        ["Single Student", "Batch Upload", "Privacy Info"]
     )
     
     st.markdown("---")
@@ -1006,105 +619,49 @@ with st.sidebar:
         st.session_state.app_initialized = True
         st.session_state.upload_count = 0
         st.session_state.last_upload_time = datetime.now()
-        # Reinitialize session state for form persistence
-        st.session_state.subject = "English"
-        st.session_state.year = 7
-        st.session_state.name = ""
-        st.session_state.gender = "Male"
-        st.session_state.att = 75
-        st.session_state.achieve = 75
-        st.session_state.target = 75
-        st.session_state.attitude_target = ""
         st.success("All data cleared!")
         st.rerun()
 
-# Main content area - CENTERED BLACK TITLE
-st.markdown("<h1>CommentCraft</h1>", unsafe_allow_html=True)
+# Main content area
+st.title("CommentCraft")
 
-# Privacy notice - YELLOW BACKGROUND, ONE LINE
-st.warning("**Privacy Notice:** All data is processed in memory only. No files are stored on servers. Close browser tab to completely erase all data. For use with anonymized student data only.")
+# Privacy notice
+st.warning("""
+**Privacy Notice:** All data is processed in memory only. No files are stored on servers. 
+Close browser tab to completely erase all data. For use with anonymized student data only.
+""")
 
 # SINGLE STUDENT MODE
 if app_mode == "Single Student":
     st.subheader("Single Student Entry")
     
-    with st.form("single_student_form"):
+    with st.form("single_student_form", clear_on_submit=True):
         col1, col2 = st.columns(2)
         
         with col1:
-            subject = st.selectbox(
-                "Subject", 
-                ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"],
-                index=["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"].index(st.session_state.subject) 
-                if st.session_state.subject in ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"] 
-                else 0,
-                key="subject_select"
-            )
-            
-            year = st.selectbox(
-                "Year", 
-                [5, 7, 8, 10, 11],
-                index=[5, 7, 8, 10, 11].index(st.session_state.year) if st.session_state.year in [5, 7, 8, 10, 11] else 1,
-                key="year_select"
-            )
-            
-            name = st.text_input(
-                "Student Name", 
-                placeholder="Enter first name only",
-                value=st.session_state.name,
-                key="name_input"
-            )
-            
-            gender = st.selectbox(
-                "Gender", 
-                ["Male", "Female"],
-                index=0 if st.session_state.gender == "Male" else 1,
-                key="gender_select"
-            )
+            subject = st.selectbox("Subject", ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"])
+            year = st.selectbox("Year", [5, 7, 8, 10, 11])
+            name = st.text_input("Student Name", placeholder="Enter first name only")
+            gender = st.selectbox("Gender", ["Male", "Female"])
         
         with col2:
-            att = st.selectbox(
-                "Attitude Band", 
-                options=[90,85,80,75,70,65,60,55,40],
-                index=[90,85,80,75,70,65,60,55,40].index(st.session_state.att) if st.session_state.att in [90,85,80,75,70,65,60,55,40] else 3,
-                key="att_select"
-            )
+            att = st.selectbox("Attitude Band", 
+                             options=[90,85,80,75,70,65,60,55,40],
+                             index=3)
             
-            achieve = st.selectbox(
-                "Achievement Band",
-                options=[90,85,80,75,70,65,60,55,40],
-                index=[90,85,80,75,70,65,60,55,40].index(st.session_state.achieve) if st.session_state.achieve in [90,85,80,75,70,65,60,55,40] else 3,
-                key="achieve_select"
-            )
+            achieve = st.selectbox("Achievement Band",
+                                 options=[90,85,80,75,70,65,60,55,40],
+                                 index=3)
             
-            target = st.selectbox(
-                "Target Band",
-                options=[90,85,80,75,70,65,60,55,40],
-                index=[90,85,80,75,70,65,60,55,40].index(st.session_state.target) if st.session_state.target in [90,85,80,75,70,65,60,55,40] else 3,
-                key="target_select"
-            )
+            target = st.selectbox("Target Band",
+                                options=[90,85,80,75,70,65,60,55,40],
+                                index=3)
         
-        # CHANGED: Renamed from "Optional Attitude Next Steps" to "Optional Additional Comment"
-        attitude_target = st.text_area(
-            "Optional Additional Comment",
-            placeholder="Add any additional comments here...",
-            height=60,
-            value=st.session_state.attitude_target,
-            key="optional_text_area"
-        )
+        attitude_target = st.text_area("Optional Additional Comment",
+                                     placeholder="Add any additional comments here...",
+                                     height=60)
         
         submitted = st.form_submit_button("Generate Comment")
-        
-        if submitted:
-            # Update session state with current values
-            st.session_state.subject = subject
-            st.session_state.year = year
-            st.session_state.name = name
-            st.session_state.gender = gender
-            st.session_state.att = att
-            st.session_state.achieve = achieve
-            st.session_state.target = target
-            st.session_state.attitude_target = attitude_target
     
     if submitted and name:
         if not validate_upload_rate():
@@ -1113,7 +670,6 @@ if app_mode == "Single Student":
         name = sanitize_input(name)
         
         with st.spinner("Generating comment..."):
-            # FIXED: Now correctly passing optional_text parameter
             comment = generate_comment(
                 subject=subject,
                 year=year,
@@ -1122,13 +678,13 @@ if app_mode == "Single Student":
                 att=att,
                 achieve=achieve,
                 target=target,
-                optional_text=attitude_target  # This is the key change
+                optional_text=attitude_target
             )
             char_count = len(comment)
         
         # Display comment
         st.subheader("Generated Comment")
-        st.text_area("", comment, height=200, key="generated_comment")
+        st.text_area("", comment, height=200)
         
         # Stats
         col1, col2, col3 = st.columns(3)
@@ -1155,11 +711,8 @@ if app_mode == "Single Student":
         }
         st.session_state.all_comments.append(student_entry)
         
-        # Add another button - PURPLE BACKGROUND
+        # Add another button
         if st.button("Add Another Student"):
-            # Keep the current subject and year, but clear other fields
-            st.session_state.name = ""
-            st.session_state.attitude_target = ""
             st.rerun()
 
 # BATCH UPLOAD MODE
@@ -1182,7 +735,6 @@ Sarah,Female,Maths,5,80,75,80
 Ahmed,Male,ESL (IGCSE),10,85,90,85
 Maria,Female,Chemistry,11,80,85,80"""
     
-    # CSV download button with purple background
     st.download_button(
         label="Download Example CSV",
         data=example_csv,
@@ -1221,7 +773,6 @@ Maria,Female,Chemistry,11,80,85,80"""
                     progress_bar.progress(progress)
                     
                     try:
-                        # FIXED: No optional_text for batch upload (keep as None)
                         comment = generate_comment(
                             subject=str(row.get('Subject', 'English')),
                             year=int(row.get('Year', 7)),
@@ -1229,8 +780,7 @@ Maria,Female,Chemistry,11,80,85,80"""
                             gender=str(row.get('Gender', '')),
                             att=int(row.get('Attitude', 75)),
                             achieve=int(row.get('Achievement', 75)),
-                            target=int(row.get('Target', 75)),
-                            optional_text=None  # No optional text for batch upload
+                            target=int(row.get('Target', 75))
                         )
                         
                         student_entry = {
@@ -1238,7 +788,7 @@ Maria,Female,Chemistry,11,80,85,80"""
                             'subject': str(row.get('Subject', 'English')),
                             'year': int(row.get('Year', 7)),
                             'comment': comment,
-                            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M")
+                            'timestamp': datetime.now().strftime("%Y-%m-d %H:%M")
                         }
                         st.session_state.all_comments.append(student_entry)
                         
@@ -1347,4 +897,4 @@ if 'all_comments' in st.session_state and st.session_state.all_comments:
 
 # FOOTER
 st.markdown("---")
-st.caption("CommentCraft v4.0 • Secure & Private • British English")
+st.caption("CommentCraft v4.0 • Secure & Private")
