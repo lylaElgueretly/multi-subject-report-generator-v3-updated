@@ -917,8 +917,7 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             if comment.strip().endswith('.'):
                 comment = comment.rstrip() + ' ' + optional_text
             else:
-                comment = comment.rstrip() + '. ' + optional_text
-                
+                comment = comment.rstrip() + '. ' + optional_text            
     # Truncate after adding optional text
     comment = truncate_comment(comment, TARGET_CHARS)
     
