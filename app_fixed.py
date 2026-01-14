@@ -141,14 +141,14 @@ try:
         closer_bank as closer_esl
     )
 
-    # Chemistry
-    from statements_igcse_0620_chemistry import (
-        opening_phrases as opening_chem,
-        attitude_bank as attitude_chem,
-        chemistry_bank as chemistry_chem,
-        target_bank as target_chem,
-        closer_bank as closer_chem
-    )
+    # Chemistry (IGCSE 0620)
+from statements_igcse_0620_chemistry_SKILLS import (
+    opening_phrases as opening_chem,
+    attitude_bank as attitude_chem,
+    chemistry_bank as chemistry_chem,
+    target_bank as target_chem,
+    closer_bank as closer_chem
+)
 
 except ImportError as e:
     st.error(f"Missing required statement files: {e}")
