@@ -665,8 +665,27 @@ if app_mode == "Single Student":
         col1, col2 = st.columns(2)
         
         with col1:
-            subject = st.selectbox("Subject", ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"])
-            year = st.selectbox("Year", [5, 7, 8, 10, 11])
+            # Get last subject from session state, default to "English"
+            last_subject = st.session_state.get("last_subject", "English")
+            subjects = ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"]
+            
+            # Find index of last subject
+            subject_index = 0
+            if last_subject in subjects:
+                subject_index = subjects.index(last_subject)
+            
+            subject = st.selectbox("Subject", subjects, index=subject_index)
+            
+            # Get last year from session state, default to 7
+            last_year = st.session_state.get("last_year", 7)
+            years = [5, 7, 8, 10, 11]
+            
+            # Find index of last year
+            year_index = 1  # Default to 7 (index 1)
+            if last_year in years:
+                year_index = years.index(last_year)
+            
+            year = st.selectbox("Year", years, index=year_index)
             name = st.text_input("Student Name", placeholder="Enter first name only")
             gender = st.selectbox("Gender", ["Male", "Female"])
         
