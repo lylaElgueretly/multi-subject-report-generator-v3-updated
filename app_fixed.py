@@ -205,6 +205,126 @@ def process_csv_securely(uploaded_file):
         except:
             pass
 
+# -------------------------
+# COMMENT GENERATION FUNCTION
+# -------------------------
+def generate_comment(subject, year, name, gender, att, achieve, target, optional_text=None):
+    """
+    Generate a report comment based on subject, year, student info, and performance bands.
+    """
+    pronoun, possessive = get_pronouns(gender)
+
+    # Pick statement banks based on subject & year
+    if subject == "English":
+        if year == 5:
+            opening = random.choice(opening_5_eng)
+            attitude = attitude_5_eng.get(att, "")
+            reading = random.choice(reading_5_eng)
+            writing = random.choice(writing_5_eng)
+            closer = random.choice(closer_5_eng)
+            targets = f"Target: {random.choice(target_5_eng)}"
+        elif year == 7:
+            opening = random.choice(opening_7_eng)
+            attitude = attitude_7_eng.get(att, "")
+            reading = random.choice(reading_7_eng)
+            writing = random.choice(writing_7_eng)
+            closer = random.choice(closer_7_eng)
+            targets = f"Target: {random.choice(target_7_eng)}"
+        elif year == 8:
+            opening = random.choice(opening_8_eng)
+            attitude = attitude_8_eng.get(att, "")
+            reading = random.choice(reading_8_eng)
+            writing = random.choice(writing_8_eng)
+            closer = random.choice(closer_8_eng)
+            targets = f"Target: {random.choice(target_8_eng)}"
+        else:
+            return "English statements for this year not available."
+
+        comment = f"{opening} {attitude} {reading} {writing} {targets} {closer}"
+    
+    elif subject == "Maths":
+        if year == 5:
+            opening = random.choice(opening_5_math)
+            attitude = attitude_5_math.get(att, "")
+            maths = random.choice(maths_5_math)
+            targets = f"Target: {random.choice(target_5_math)}"
+            closer = random.choice(closer_5_math)
+        elif year == 7:
+            opening = random.choice(opening_7_math)
+            attitude = attitude_7_math.get(att, "")
+            maths = random.choice(maths_7_math)
+            targets = f"Target: {random.choice(target_7_math)}"
+            closer = random.choice(closer_7_math)
+        elif year == 8:
+            opening = random.choice(opening_8_math)
+            attitude = attitude_8_math.get(att, "")
+            maths = random.choice(maths_8_math)
+            targets = f"Target: {random.choice(target_8_math)}"
+            closer = random.choice(closer_8_math)
+        else:
+            return "Maths statements for this year not available."
+
+        comment = f"{opening} {attitude} {maths} {targets} {closer}"
+
+    elif subject == "Science":
+        if year == 5:
+            opening = random.choice(opening_5_sci)
+            attitude = attitude_5_sci.get(att, "")
+            science = random.choice(science_5_sci)
+            targets = f"Target: {random.choice(target_5_sci)}"
+            closer = random.choice(closer_5_sci)
+        elif year == 7:
+            opening = random.choice(opening_7_sci)
+            attitude = attitude_7_sci.get(att, "")
+            science = random.choice(science_7_sci)
+            targets = f"Target: {random.choice(target_7_sci)}"
+            closer = random.choice(closer_7_sci)
+        elif year == 8:
+            opening = random.choice(opening_8_sci)
+            attitude = attitude_8_sci.get(att, "")
+            science = random.choice(science_8_sci)
+            targets = f"Target: {random.choice(target_8_sci)}"
+            closer = random.choice(closer_8_sci)
+        else:
+            return "Science statements for this year not available."
+
+        comment = f"{opening} {attitude} {science} {targets} {closer}"
+
+    elif subject == "ESL (IGCSE)":
+        opening = random.choice(opening_esl)
+        attitude_stmt = attitude_esl.get(att, "")
+        reading_stmt = random.choice(reading_esl)
+        writing_stmt = random.choice(writing_esl)
+        speaking_stmt = random.choice(speaking_esl)
+        listening_stmt = random.choice(listening_esl)
+        targets = f"Targets: {random.choice(target_reading_esl)}, {random.choice(target_write_esl)}, {random.choice(target_speak_esl)}, {random.choice(target_listen_esl)}"
+        closer = random.choice(closer_esl)
+        comment = f"{opening} {attitude_stmt} {reading_stmt} {writing_stmt} {speaking_stmt} {listening_stmt} {targets} {closer}"
+
+    elif subject == "Chemistry":
+        opening = random.choice(opening_chem)
+        attitude_stmt = attitude_chem.get(att, "")
+        chemistry_stmt = random.choice(chemistry_chem)
+        targets = f"Target: {random.choice(target_chem)}"
+        closer = random.choice(closer_chem)
+        comment = f"{opening} {attitude_stmt} {chemistry_stmt} {targets} {closer}"
+
+    else:
+        return "Subject not supported."
+
+    # Add optional text
+    if optional_text:
+        comment += " " + optional_text.strip()
+
+    # Fix pronouns
+    comment = fix_pronouns_in_text(comment, pronoun, possessive)
+
+    # Fix capitalization and truncate
+    comment = fix_sentence_capitalization(comment)
+    comment = truncate_comment(comment, TARGET_CHARS)
+
+    return comment
+
 # HELPER FUNCTIONS
 def get_pronouns(gender):
     gender = gender.lower()
