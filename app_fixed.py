@@ -655,9 +655,21 @@ if app_mode == "Single Student":
     with st.form("single_student_form", clear_on_submit=True):
         col1, col2 = st.columns(2)
         
-        with col1:
-            subject = st.selectbox("Subject", ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"])
-            year = st.selectbox("Year", [5, 7, 8, 10, 11])
+                with col1:
+            subject = st.selectbox(
+                "Subject", 
+                ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"],
+                index=["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"].index(
+                    st.session_state.get("last_subject", "English")
+                )
+            )
+            year = st.selectbox(
+                "Year", 
+                [5, 7, 8, 10, 11],
+                index=[5, 7, 8, 10, 11].index(
+                    st.session_state.get("last_year", 7)
+                )
+            )
             name = st.text_input("Student Name", placeholder="Enter first name only")
             gender = st.selectbox("Gender", ["Male", "Female"])
         
@@ -729,9 +741,8 @@ if app_mode == "Single Student":
         st.session_state.all_comments.append(student_entry)
         
         # Add another button
-        if st.button("Add Another Student"):
+                if st.button("Add Another Student"):
             st.rerun()
-
 # BATCH UPLOAD MODE
 elif app_mode == "Batch Upload":
     st.subheader("Batch Upload (CSV)")
