@@ -872,11 +872,29 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         attitude_text = fix_pronouns_in_text(attitude_chem[att], p, p_poss)
         attitude_sentence = f"{opening} {name} {attitude_text}"
         
+        # FIXED: Handle Chemistry achievement text which may have multiple sentences
         chemistry_text = fix_pronouns_in_text(chemistry_chem[achieve], p, p_poss)
         chemistry_text = ensure_proper_capitalization(chemistry_text)
-        if chemistry_text[0].islower():
-            chemistry_text = f"{p.capitalize()} {chemistry_text}"
-        chemistry_sentence = chemistry_text
+        
+        # Split into sentences and ensure each starts with pronoun if needed
+        sentences = re.split(r'(?<=[.!?])\s+', chemistry_text)
+        fixed_sentences = []
+        
+        for sentence in sentences:
+            if sentence:
+                # Remove any trailing period for processing
+                sentence = sentence.strip()
+                if sentence.endswith('.'):
+                    sentence = sentence[:-1]
+                
+                # If sentence starts with lowercase (and is a verb), add pronoun
+                if sentence and sentence[0].islower():
+                    # Check if it's a verb (starts with verb form)
+                    sentence = f"{p.capitalize()} {sentence}"
+                
+                fixed_sentences.append(sentence + '.')
+        
+        chemistry_sentence = ' '.join(fixed_sentences)
         
         target_text = fix_pronouns_in_text(target_chem[target], p, p_poss)
         target_text = ensure_proper_capitalization(target_text)
@@ -905,7 +923,7 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
     
     # ADD OPTIONAL TEXT AT THE VERY END (AFTER EVERYTHING ELSE)
     if optional_text:
-        optional_text = sanitize_input(optional_text, max_length=200)
+        optional_text = sanitize_input(optional_text)
         if optional_text:
             # Ensure optional text starts with capital letter and ends with period
             if not optional_text[0].isupper():
@@ -913,11 +931,14 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             if not optional_text.endswith('.'):
                 optional_text += '.'
             
-            # Add to the end of the comment - simply append with space
+            # Add to the end of the comment with proper punctuation
             if comment.strip().endswith('.'):
-                comment = comment.rstrip() + ' ' + optional_text
+                comment = comment.rstrip()
+                comment = comment[:-1]  # Remove the last period
+                comment += f". Additionally, {lowercase_first(optional_text)}"
             else:
-                comment = comment.rstrip() + '. ' + optional_text            
+                comment += f". Additionally, {lowercase_first(optional_text)}"
+    
     # Truncate after adding optional text
     comment = truncate_comment(comment, TARGET_CHARS)
     
@@ -928,8 +949,10 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
     # Final capitalization check
     comment = ensure_proper_capitalization(comment)
     
+    # Final fix: Replace any remaining " he " at sentence start with "He "
+    comment = re.sub(r'(^|\. )h(e |im |is |er )', lambda m: m.group(0).replace('h', 'H'), comment)
+    
     return comment
-
 # STREAMLIT APP LAYOUT
 
 # Sidebar for navigation
