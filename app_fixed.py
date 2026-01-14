@@ -655,7 +655,7 @@ if app_mode == "Single Student":
     with st.form("single_student_form", clear_on_submit=True):
         col1, col2 = st.columns(2)
         
-                with col1:
+        with col1:
             subject = st.selectbox(
                 "Subject", 
                 ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"],
