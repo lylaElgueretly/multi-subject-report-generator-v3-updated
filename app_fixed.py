@@ -293,28 +293,53 @@ st.title("CommentCraft")
 if app_mode == "Single Student":
     st.subheader("Single Student Entry")
     
+    # Initialize defaults if not exist
+    if 'last_subject' not in st.session_state:
+        st.session_state.last_subject = "English"
+    if 'last_year' not in st.session_state:
+        st.session_state.last_year = 7
+
     with st.form("single_student_form", clear_on_submit=False):
         col1, col2 = st.columns(2)
         
-        subjects_list = ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"]
-        years_list = [5, 7, 8, 10, 11]
-        
-        # Use last subject/year as default
-        default_subject_index = subjects_list.index(st.session_state.last_subject) if st.session_state.last_subject in subjects_list else 0
-        default_year_index = years_list.index(st.session_state.last_year) if st.session_state.last_year in years_list else 1
-        
         with col1:
-            subject = st.selectbox("Subject", subjects_list, index=default_subject_index)
-            year = st.selectbox("Year", years_list, index=default_year_index)
+            subject = st.selectbox(
+                "Subject",
+                ["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"],
+                index=["English", "Maths", "Science", "ESL (IGCSE)", "Chemistry"].index(st.session_state.last_subject)
+            )
+            year = st.selectbox(
+                "Year",
+                [5, 7, 8, 10, 11],
+                index=[5, 7, 8, 10, 11].index(st.session_state.last_year)
+            )
             name = st.text_input("Student Name", placeholder="Enter first name only")
             gender = st.selectbox("Gender", ["Male", "Female"])
         
         with col2:
-            att = st.selectbox("Attitude Band", options=[90,85,80,75,70,65,60,55,40], index=3)
-            achieve = st.selectbox("Achievement Band", options=[90,85,80,75,70,65,60,55,40], index=3)
-            target = st.selectbox("Target Band", options=[90,85,80,75,70,65,60,55,40], index=3)
+            att = st.selectbox(
+                "Attitude Band", 
+                options=[90,85,80,75,70,65,60,55,40],
+                index=3
+            )
+            
+            achieve = st.selectbox(
+                "Achievement Band",
+                options=[90,85,80,75,70,65,60,55,40],
+                index=3
+            )
+            
+            target = st.selectbox(
+                "Target Band",
+                options=[90,85,80,75,70,65,60,55,40],
+                index=3
+            )
         
-        attitude_target = st.text_area("Optional Additional Comment", placeholder="Add any additional comments here...", height=60)
+        attitude_target = st.text_area(
+            "Optional Additional Comment",
+            placeholder="Add any additional comments here...",
+            height=60
+        )
         
         submitted = st.form_submit_button("Generate Comment")
     
@@ -323,8 +348,6 @@ if app_mode == "Single Student":
             st.stop()
         
         name = sanitize_input(name)
-        st.session_state.last_subject = subject
-        st.session_state.last_year = year
         
         with st.spinner("Generating comment..."):
             comment = generate_comment(
@@ -337,104 +360,44 @@ if app_mode == "Single Student":
                 target=target,
                 optional_text=attitude_target
             )
+            char_count = len(comment)
         
+        # Display comment
         st.subheader("Generated Comment")
         st.text_area("", comment, height=200)
         
-        st.session_state.all_comments.append({
+        # Stats
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Character Count", f"{char_count}/500")
+        with col2:
+            st.metric("Words", len(comment.split()))
+        with col3:
+            if char_count < 450:
+                st.success("Good length")
+            else:
+                st.warning("Near limit")
+        
+        # Store in session
+        if 'all_comments' not in st.session_state:
+            st.session_state.all_comments = []
+        
+        student_entry = {
             'name': name,
             'subject': subject,
             'year': year,
             'comment': comment,
             'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M")
-        })
+        }
+        st.session_state.all_comments.append(student_entry)
         
+        # Save last selections for next comment
+        st.session_state.last_subject = subject
+        st.session_state.last_year = year
+        
+        # Add another button
         if st.button("Add Another Student"):
             st.rerun()
-
-# BATCH UPLOAD MODE
-elif app_mode == "Batch Upload":
-    st.subheader("Batch Upload (CSV)")
-    
-    st.info("""
-    **CSV Format Required:**
-    - Columns: Student Name, Gender, Subject, Year, Attitude, Achievement, Target
-    - Gender: Male/Female
-    - Subject: English/Maths/Science/ESL (IGCSE)/Chemistry
-    - Year: 5,7,8,10,11
-    - Bands: 90,85,80,75,70,65,60,55,40
-    """)
-    
-    # Example CSV
-    example_csv = """Student Name,Gender,Subject,Year,Attitude,Achievement,Target
-John,Male,English,7,75,80,85
-Sarah,Female,Maths,5,80,75,80
-Ahmed,Male,ESL (IGCSE),10,85,90,85
-Maria,Female,Chemistry,11,80,85,80"""
-    
-    st.download_button(
-        label="Download Example CSV",
-        data=example_csv,
-        file_name="example_students.csv",
-        mime="text/csv"
-    )
-    
-    uploaded_file = st.file_uploader("Choose CSV file", type=['csv'])
-    
-    if uploaded_file:
-        if not validate_upload_rate():
-            st.stop()
-        
-        is_valid, msg = validate_file(uploaded_file)
-        if not is_valid:
-            st.error(msg)
-            st.stop()
-        
-        with st.spinner("Processing CSV..."):
-            df = process_csv_securely(uploaded_file)
-        
-        if df is not None:
-            st.success(f"Processed {len(df)} students")
-            
-            with st.expander("Preview Data"):
-                st.dataframe(df.head())
-            
-            if st.button("Generate All Comments"):
-                if 'all_comments' not in st.session_state:
-                    st.session_state.all_comments = []
-                
-                progress_bar = st.progress(0)
-                
-                for idx, row in df.iterrows():
-                    progress = (idx + 1) / len(df)
-                    progress_bar.progress(progress)
-                    
-                    try:
-                        comment = generate_comment(
-                            subject=str(row.get('Subject', 'English')),
-                            year=int(row.get('Year', 7)),
-                            name=str(row.get('Student Name', '')),
-                            gender=str(row.get('Gender', '')),
-                            att=int(row.get('Attitude', 75)),
-                            achieve=int(row.get('Achievement', 75)),
-                            target=int(row.get('Target', 75))
-                        )
-                        
-                        student_entry = {
-                            'name': sanitize_input(str(row.get('Student Name', ''))),
-                            'subject': str(row.get('Subject', 'English')),
-                            'year': int(row.get('Year', 7)),
-                            'comment': comment,
-                            'timestamp': datetime.now().strftime("%Y-%m-d %H:%M")
-                        }
-                        st.session_state.all_comments.append(student_entry)
-                        
-                    except Exception as e:
-                        st.error(f"Error processing row {idx + 1}: {e}")
-                
-                progress_bar.empty()
-                st.success(f"Generated {len(df)} comments!")
-                st.session_state.last_upload_time = datetime.now()
 
 # PRIVACY INFO MODE
 elif app_mode == "Privacy Info":
