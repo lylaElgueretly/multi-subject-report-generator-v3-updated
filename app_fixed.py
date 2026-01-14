@@ -556,6 +556,22 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
     # Initialize comment parts
     comment_parts = []
     
+    # Prepare optional sentence if provided
+    optional_sentence = ""
+    if optional_text and str(optional_text).strip():
+        optional_text = str(optional_text).strip()
+        optional_text = sanitize_input(optional_text, max_length=200)
+        
+        if optional_text:
+            # Ensure proper formatting
+            if optional_text[0].islower():
+                optional_text = optional_text[0].upper() + optional_text[1:]
+            if not optional_text.endswith('.'):
+                optional_text += '.'
+            
+            # Create optional sentence
+            optional_sentence = f"Additionally, {lowercase_first(optional_text)}"
+    
     # Subject-specific comment generation
     if subject == "English":
         if year == 5:
@@ -585,14 +601,21 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             
             closer_sentence = random.choice(closer_5_eng)
             
+            # Build comment with optional text
             comment_parts = [
                 attitude_sentence,
                 reading_sentence,
                 writing_sentence,
                 reading_target_sentence,
                 writing_target_sentence,
-                closer_sentence
             ]
+            
+            # Add optional text if provided
+            if optional_sentence:
+                comment_parts.append(optional_sentence)
+            
+            # Add closer at the end
+            comment_parts.append(closer_sentence)
             
         elif year == 7:
             opening = random.choice(opening_7_eng)
@@ -621,14 +644,21 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             
             closer_sentence = random.choice(closer_7_eng)
             
+            # Build comment with optional text
             comment_parts = [
                 attitude_sentence,
                 reading_sentence,
                 writing_sentence,
                 reading_target_sentence,
                 writing_target_sentence,
-                closer_sentence
             ]
+            
+            # Add optional text if provided
+            if optional_sentence:
+                comment_parts.append(optional_sentence)
+            
+            # Add closer at the end
+            comment_parts.append(closer_sentence)
             
         else:  # Year 8
             opening = random.choice(opening_8_eng)
@@ -657,14 +687,21 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             
             closer_sentence = random.choice(closer_8_eng)
             
+            # Build comment with optional text
             comment_parts = [
                 attitude_sentence,
                 reading_sentence,
                 writing_sentence,
                 reading_target_sentence,
                 writing_target_sentence,
-                closer_sentence
             ]
+            
+            # Add optional text if provided
+            if optional_sentence:
+                comment_parts.append(optional_sentence)
+            
+            # Add closer at the end
+            comment_parts.append(closer_sentence)
         
     elif subject == "Science":
         if year == 5:
@@ -684,12 +721,19 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             
             closer_sentence = random.choice(closer_5_sci)
             
+            # Build comment with optional text
             comment_parts = [
                 attitude_sentence,
                 science_sentence,
                 target_sentence,
-                closer_sentence
             ]
+            
+            # Add optional text if provided
+            if optional_sentence:
+                comment_parts.append(optional_sentence)
+            
+            # Add closer at the end
+            comment_parts.append(closer_sentence)
             
         elif year == 7:
             opening = random.choice(opening_7_sci)
@@ -708,12 +752,19 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             
             closer_sentence = random.choice(closer_7_sci)
             
+            # Build comment with optional text
             comment_parts = [
                 attitude_sentence,
                 science_sentence,
                 target_sentence,
-                closer_sentence
             ]
+            
+            # Add optional text if provided
+            if optional_sentence:
+                comment_parts.append(optional_sentence)
+            
+            # Add closer at the end
+            comment_parts.append(closer_sentence)
             
         else:  # Year 8
             opening = random.choice(opening_8_sci)
@@ -732,12 +783,19 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             
             closer_sentence = random.choice(closer_8_sci)
             
+            # Build comment with optional text
             comment_parts = [
                 attitude_sentence,
                 science_sentence,
                 target_sentence,
-                closer_sentence
             ]
+            
+            # Add optional text if provided
+            if optional_sentence:
+                comment_parts.append(optional_sentence)
+            
+            # Add closer at the end
+            comment_parts.append(closer_sentence)
         
     elif subject == "Maths":
         if year == 5:
@@ -757,12 +815,19 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             
             closer_sentence = random.choice(closer_5_math)
             
+            # Build comment with optional text
             comment_parts = [
                 attitude_sentence,
                 maths_sentence,
                 target_sentence,
-                closer_sentence
             ]
+            
+            # Add optional text if provided
+            if optional_sentence:
+                comment_parts.append(optional_sentence)
+            
+            # Add closer at the end
+            comment_parts.append(closer_sentence)
             
         elif year == 7:
             opening = random.choice(opening_7_math)
@@ -781,12 +846,19 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             
             closer_sentence = random.choice(closer_7_math)
             
+            # Build comment with optional text
             comment_parts = [
                 attitude_sentence,
                 maths_sentence,
                 target_sentence,
-                closer_sentence
             ]
+            
+            # Add optional text if provided
+            if optional_sentence:
+                comment_parts.append(optional_sentence)
+            
+            # Add closer at the end
+            comment_parts.append(closer_sentence)
             
         else:  # Year 8
             opening = random.choice(opening_8_math)
@@ -805,12 +877,19 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             
             closer_sentence = random.choice(closer_8_math)
             
+            # Build comment with optional text
             comment_parts = [
                 attitude_sentence,
                 maths_sentence,
                 target_sentence,
-                closer_sentence
             ]
+            
+            # Add optional text if provided
+            if optional_sentence:
+                comment_parts.append(optional_sentence)
+            
+            # Add closer at the end
+            comment_parts.append(closer_sentence)
         
     elif subject == "ESL (IGCSE)":
         opening = random.choice(opening_esl)
@@ -856,6 +935,7 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         
         closer_sentence = random.choice(closer_esl)
         
+        # Build comment with optional text
         comment_parts = [
             attitude_sentence,
             reading_sentence,
@@ -864,8 +944,14 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
             listening_sentence,
             reading_target_sentence,
             writing_target_sentence,
-            closer_sentence
         ]
+        
+        # Add optional text if provided
+        if optional_sentence:
+            comment_parts.append(optional_sentence)
+        
+        # Add closer at the end
+        comment_parts.append(closer_sentence)
         
     elif subject == "Chemistry":
         opening = random.choice(opening_chem)
@@ -904,44 +990,27 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         
         closer_sentence = random.choice(closer_chem)
         
+        # Build comment with optional text
         comment_parts = [
             attitude_sentence,
             chemistry_sentence,
             target_sentence,
-            closer_sentence
         ]
+        
+        # Add optional text if provided
+        if optional_sentence:
+            comment_parts.append(optional_sentence)
+        
+        # Add closer at the end
+        comment_parts.append(closer_sentence)
     
     else:
         # Default fallback if subject not recognized
         comment_parts = [f"{name} has worked in {subject} this term."]
-    
-    # ADD OPTIONAL TEXT TO COMMENT_PARTS (BEFORE JOINING)
-    # This is the FIX - we need to add optional text to comment_parts, not after joining
-    if optional_text and str(optional_text).strip():
-        optional_text = str(optional_text).strip()
-        # Sanitize
-        optional_text = sanitize_input(optional_text, max_length=200)
         
-        if optional_text:
-            # Ensure proper formatting
-            if optional_text[0].islower():
-                optional_text = optional_text[0].upper() + optional_text[1:]
-            if not optional_text.endswith('.'):
-                optional_text += '.'
-            
-            # Create optional sentence
-            optional_sentence = f"Additionally, {lowercase_first(optional_text)}"
-            
-            # Add to comment_parts BEFORE the closer sentence
-            if comment_parts:
-                # Find the closer sentence position
-                for i, part in enumerate(comment_parts):
-                    if any(closer_word in part.lower() for closer_word in ['keep', 'well done', 'continue', 'congratulation']):
-                        comment_parts.insert(i, optional_sentence)
-                        break
-                else:
-                    # If no closer found, add to end
-                    comment_parts.append(optional_sentence)
+        # Add optional text if provided
+        if optional_sentence:
+            comment_parts.append(optional_sentence)
     
     # Ensure all sentences end with period
     for i in range(len(comment_parts)):
@@ -951,7 +1020,7 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
     # Join comment parts
     comment = " ".join([c for c in comment_parts if c])
     
-    # FINAL FIXES for Chemistry pronoun issues
+    # FINAL FIXES for Chemistry pronoun issues (only for Chemistry)
     if subject == "Chemistry":
         # Fix sentences starting with verbs without pronouns
         verb_patterns = [
@@ -963,6 +1032,14 @@ def generate_comment(subject, year, name, gender, att, achieve, target, optional
         for pattern, replacement in verb_patterns:
             comment = re.sub(pattern, replacement, comment)
     
+    # Truncate to target length
+    comment = truncate_comment(comment, TARGET_CHARS)
+    
+    # Ensure comment ends with period
+    if not comment.endswith('.'):
+        comment = comment.rstrip(' ,;') + '.'
+    
+    return comment
     # Truncate to target length
     comment = truncate_comment(comment, TARGET_CHARS)
     
